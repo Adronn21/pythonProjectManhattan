@@ -10,7 +10,7 @@ def getSatelite(satelite, year, geometry):
                     .filterBounds(geometry) \
                     .median()
 
-    return sat_filtered.select(sat_names[satelite][1])
+    return sat_filtered
 
 st.header("Satelite Imagery")
 
