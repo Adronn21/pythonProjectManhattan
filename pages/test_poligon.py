@@ -29,26 +29,14 @@ with col1:
 # File uploader for Excel files
 uploaded_file = st.file_uploader("Choose a file", type=["xlsx"])
 
-# Button to process the file
-if st.button("Process File"):
-    # Check if a file is uploaded
-    if uploaded_file is not None:
-        # For CSV files
-        if uploaded_file.name.endswith('.csv'):
-            df = pd.read_csv(uploaded_file)
-            st.write("CSV file contents:")
-            st.dataframe(df)
+if uploaded_file is not None:
+    # Reading the file as bytes
+    bytes_data = uploaded_file.read()
+    st.write("File content as bytes:")
+    st.write(bytes_data)
 
-        # For Excel files
-        elif uploaded_file.name.endswith('.xlsx'):
-            df = pd.read_excel(uploaded_file)
-            st.write("Excel file contents:")
-            st.dataframe(df)
-
-        # For text files
-        elif uploaded_file.name.endswith('.txt'):
-            content = uploaded_file.read().decode('utf-8')
-            st.write("Text file contents:")
-            st.text(content)
-    else:
-        st.warning("Please upload a file before clicking the button.")
+    # Reading the file into a DataFrame if it's an Excel file
+    if uploaded_file.name.endswith('.xlsx'):
+        df = pd.read_excel(uploaded_file)
+        st.write("File content as a DataFrame:")
+        st.write(df)
