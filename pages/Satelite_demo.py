@@ -2,6 +2,7 @@ import ee
 import streamlit as st
 import geemap.foliumap as geemap
 import pandas as pd
+import geopandas as gpd
 
 st.set_page_config(layout="wide")
 
@@ -17,7 +18,7 @@ def getSatelite(satelite, year, geometry):
 
 st.header("Satelite Imagery")
 
-sat_names = {"Landsat-9":["LANDSAT/LC08/C01/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2014, 2024]],
+sat_names = {"Landsat-9":["LANDSAT/LC08/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2014, 2024]],
              "Sentinel-2":["COPERNICUS/S2_SR_HARMONIZED", ['B4', 'B3', 'B2'], [2018, 2024]]
 }
 
@@ -66,8 +67,6 @@ uploaded_shp_file = st.sidebar.file_uploader("Shapefile", type=["shp"])
 
 # Создание вкладки "Загрузка Shapefile"
 if uploaded_shp_file is not None:
-    # Импорт необходимых библиотек
-    import geopandas as gpd
 
     # Загрузка Shapefile в GeoDataFrame
     gdf = gpd.read_file(uploaded_shp_file)
