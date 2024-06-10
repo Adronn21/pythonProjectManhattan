@@ -14,8 +14,8 @@ def getSatelite(satelite, year, geometry):
 
 st.header("Satelite Imagery")
 
-sat_names = {"Landsat-8":["LANDSAT/LC08/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2014, 2023]],
-            "Sentinel-2":["COPERNICUS/S2_SR_HARMONIZED", ['B4', 'B3', 'B2'], [2018, 2023]]
+sat_names = {"Landsat-9":["LANDSAT/LC09/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2022, 2024]],
+             "Sentinel-2":["COPERNICUS/S2_SR_HARMONIZED", ['B4', 'B3', 'B2'], [2018, 2024]]
 }
 
 # Create an interactive map
