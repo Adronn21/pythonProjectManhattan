@@ -7,8 +7,7 @@ st.selectbox('test', a)
 col1, col2 = st.columns([4, 1])
 options = list(geemap.basemaps.keys())
 index = options.index("OpenTopoMap")
-a=['1','2','3','4']
-st.selectbox('test', a)
+
 
 with col2:
 
