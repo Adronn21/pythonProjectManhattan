@@ -27,7 +27,11 @@ with col1:
     m.to_streamlit(height=700)
 
 # File uploader for Excel files
-uploaded_file = st.file_uploader("Choose a file", type=["xlsx"])
+uploaded_file = st.sidebar.file_uploader("Excel", type=["xlsx"])
+
+if uploaded_file is not None:
+    # Чтение данных из Excel-файла
+    xls = pd.ExcelFile(uploaded_file)
 
 if uploaded_file is not None:
     # Reading the file as bytes
