@@ -5,7 +5,7 @@ import geemap.foliumap as geemap
 def getSatelite(satelite, year, geometry):
     # Import the image collection.
     sat_filtered = ee.ImageCollection(sat_names[satelite][0]) \
-                    .filter(ee.Filter.calendarRange('2020-01-01', '2020-12-31')) \
+                    .filterDate(f'{year}-01-01', f'{year}-12-31') \
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
                     .filterBounds(geometry) \
                     .median()
