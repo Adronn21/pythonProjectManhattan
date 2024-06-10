@@ -38,7 +38,7 @@ Map.centerObject(astana_geometry, zoom=12)  # Center the map on Astana with zoom
 
 # Add a dropdown list and checkbox to the second column.
 with row1_col2:
-    sat = st.selectbox("Select a satelite", sat_names.keys())
+    sat = st.selectbox("Select a satelite", list(sat_names.keys()))
     # Select the available years.
     years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
     selected_year = st.selectbox("Select a year", years)
@@ -46,6 +46,7 @@ with row1_col2:
 
 
 if selected_year:
+
     Map.addLayer(getSatelite(sat, selected_year, astana_geometry), {'bands': sat_names[sat][1], 'min': 0, 'max': 3000}, sat + str(selected_year))
 
     with row1_col1:
@@ -53,3 +54,4 @@ if selected_year:
 else:
     with row1_col1:
         Map.to_streamlit(height=600)
+
