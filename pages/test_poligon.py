@@ -40,7 +40,7 @@ if uploaded_file is not None:
     st.write(bytes_data)
 
     # Reading the file into a DataFrame if it's an Excel file
-    if uploaded_file.name.endswith('.xlsx'):
+    if uploaded_file.name.endswith('.xls'):
         df = pd.read_excel(uploaded_file)
         st.write("File content as a DataFrame:")
         st.write(df)
