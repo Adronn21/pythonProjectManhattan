@@ -2,13 +2,10 @@ import ee
 import streamlit as st
 import geemap.foliumap as geemap
 
-# Initialize the Earth Engine module.
-ee.Initialize()
-
 # Function to get Sentinel-2 images by year.
 def getSentinel2(year):
     # Import the Sentinel-2 collection.
-    dataset = ee.ImageCollection("COPERNICUS/S2")
+    dataset = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 
     # Filter the collection by year and region.
     sentinel = dataset.filter(ee.Filter.calendarRange(year, year, 'year')) \
