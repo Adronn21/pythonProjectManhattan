@@ -27,7 +27,7 @@ with col1:
     m.to_streamlit(height=700)
 
 # File uploader for Excel files
-uploaded_file = st.sidebar.file_uploader("Excel", type=["xls"])
+uploaded_file = st.sidebar.file_uploader("Excel", type=["xlsx"])
 
 if uploaded_file is not None:
     # Чтение данных из Excel-файла
@@ -40,7 +40,7 @@ if uploaded_file is not None:
     st.write(bytes_data)
 
     # Reading the file into a DataFrame if it's an Excel file
-    if uploaded_file.name.endswith('.xls'):
+    if uploaded_file.name.endswith('.xlsx'):
         df = pd.read_excel(uploaded_file)
         st.write("File content as a DataFrame:")
         st.write(df)
