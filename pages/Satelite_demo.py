@@ -39,10 +39,11 @@ Map.centerObject(astana_geometry, zoom=12)  # Center the map on Astana with zoom
 # Add a dropdown list and checkbox to the second column.
 with row1_col2:
     sat = st.selectbox("Select a satelite", list(sat_names.keys()))
-    st.text(sat)
+
     # Select the available years.
     years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
     selected_year = st.selectbox("Select a year", years)
+    st.text(sat, selected_year)
 
 
 
