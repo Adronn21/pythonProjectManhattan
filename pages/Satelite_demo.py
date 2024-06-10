@@ -43,7 +43,8 @@ with row1_col2:
     # Select the available years.
     years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
     selected_year = st.selectbox("Select a year", years)
-    st.text(sat, selected_year)
+    st.text(sat)
+    st.text(selected_year)
 
 
 
