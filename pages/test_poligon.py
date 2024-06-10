@@ -29,30 +29,6 @@ with col1:
 # File uploader for Excel files
 uploaded_file = st.sidebar.file_uploader("Excel", type=["xlsx"])
 
-if uploaded_file is not None:
-    # Чтение данных из Excel-файла
-    xls = pd.ExcelFile(uploaded_file)
-
-
-
-
-
-sheet1 = pd.read_excel(uploaded_file, sheet_name=f'{uploaded_file.sheet_names[0]}')
-sheet2 = pd.read_excel(uploaded_file, sheet_name=f'{uploaded_file.sheet_names[1]}')
-sheets = (sheet1, sheet2)
-options_sheets = list(1, 2)
-col3, col4 = st.columns([4, 1])
-with col3:
-    if uploaded_file is not None:
-
-        # Reading the file into a DataFrame if it's an Excel file
-        if uploaded_file.name.endswith('.xlsx'):
-            df = pd.read_excel(uploaded_file)
-            st.write("File content as a DataFrame:")
-            st.write(df)
-with col4:
-    st.selectbox("Select a sheet:", options_sheets, sheets)
-
 
 # Создание вкладки "Загрузка Excel-файла"
 if uploaded_file is not None:
