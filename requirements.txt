@@ -1,4 +1,4 @@
 geemap
 streamlit
 xlrd
-
+geopandas
