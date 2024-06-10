@@ -10,7 +10,7 @@ def getSentinel2(year):
     # Filter the collection by year and region.
     sentinel = dataset.filter(ee.Filter.calendarRange(year, year, 'year')) \
                     .filterBounds(astana_geometry) \
-                    .sort('CLOUDY_PIXEL_PERCENTAGE', False) \
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
                     .median()
     # Select the RGB bands.
     rgb = sentinel.select(['B4', 'B3', 'B2'])
