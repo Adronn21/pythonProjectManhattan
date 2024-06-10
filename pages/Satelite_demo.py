@@ -1,6 +1,9 @@
 import ee
 import streamlit as st
 import geemap.foliumap as geemap
+import pandas as pd
+
+st.set_page_config(layout="wide")
 
 def getSatelite(satelite, year, geometry):
     # Import the image collection.
@@ -14,7 +17,7 @@ def getSatelite(satelite, year, geometry):
 
 st.header("Satelite Imagery")
 
-sat_names = {"Landsat-9":["LANDSAT/LC09/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2022, 2024]],
+sat_names = {"Landsat-9":["LANDSAT/LC08/C01/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2014, 2024]],
              "Sentinel-2":["COPERNICUS/S2_SR_HARMONIZED", ['B4', 'B3', 'B2'], [2018, 2024]]
 }
 
@@ -22,7 +25,7 @@ sat_names = {"Landsat-9":["LANDSAT/LC09/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'],
 Map = geemap.Map()
 
 # Create a layout containing two columns, one for the map and one for the layer dropdown list.
-row1_col1, row1_col2 = st.columns([3, 1])
+row1_col1, row1_col2 = st.columns([4, 1])
 
 
 
@@ -57,4 +60,23 @@ if selected_year:
 else:
     with row1_col1:
         Map.to_streamlit(height=600)
+
+# File uploader for Shapefiles
+uploaded_shp_file = st.sidebar.file_uploader("Shapefile", type=["shp"])
+
+# Создание вкладки "Загрузка Shapefile"
+if uploaded_shp_file is not None:
+    # Импорт необходимых библиотек
+    import geopandas as gpd
+
+    # Загрузка Shapefile в GeoDataFrame
+    gdf = gpd.read_file(uploaded_shp_file)
+
+    # Просмотр загруженных данных (опционально)
+    st.write("Пример первых строк данных:")
+    st.write(gdf.head())
+
+    # Дальнейшая обработка данных
+    # Здесь вы можете выполнять необходимые операции с GeoDataFrame gdf
+
 
