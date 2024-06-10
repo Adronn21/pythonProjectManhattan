@@ -27,7 +27,7 @@ with col1:
     m.to_streamlit(height=700)
 
 # File uploader for Excel files
-uploaded_file = st.sidebar.file_uploader("Excel", type=["xlsx"])
+uploaded_file = st.sidebar.file_uploader("Excel", type=["xls"])
 
 if uploaded_file is not None:
     # Чтение данных из Excel-файла
