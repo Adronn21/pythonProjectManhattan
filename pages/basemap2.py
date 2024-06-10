@@ -3,7 +3,7 @@ import geemap.foliumap as geemap
 
 st.title("Bekzhan's Interactive Map")
 
-col1, col2 = st.columns([1, 1])
+col1, col2 = st.columns([10, 1])
 options = list(geemap.basemaps.keys())
 index = options.index("OpenTopoMap")
 
