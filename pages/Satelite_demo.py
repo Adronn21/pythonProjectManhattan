@@ -4,8 +4,9 @@ import geemap.foliumap as geemap
 import pandas as pd
 import geopandas as gpd
 
-st.header("Satelite Imagery")
+
 st.set_page_config(layout="wide")
+st.header("Satelite Imagery")
 row1_col1, row1_col2 = st.columns([4, 1])
 
 Map = geemap.Map()
