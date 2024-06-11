@@ -25,14 +25,8 @@ sat_names = {"Landsat-9":["LANDSAT/LC08/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'],
 # Create an interactive map
 Map = geemap.Map()
 
-# Create a layout containing two columns, one for the map and one for the layer dropdown list.
 row1_col1, row1_col2 = st.columns([4, 1])
 
-
-
-
-
-# Create a geometry object for the city of Astana
 astana_geometry = ee.Geometry.Point(71.4306, 51.1694)  # Coordinates of the center of Astana
 
 # Set the map center and zoom level to Astana
@@ -45,7 +39,7 @@ with row1_col2:
     sat = st.selectbox("Select a satelite", list(sat_names.keys()))
 
     # Select the available years.
-    years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
+    years = list(None, range(sat_names[sat][2][0], sat_names[sat][2][1]))
     selected_year = st.selectbox("Select a year", years)
     st.text(sat)
     st.text(selected_year)
