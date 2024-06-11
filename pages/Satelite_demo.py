@@ -4,10 +4,16 @@ import geemap.foliumap as geemap
 import pandas as pd
 import geopandas as gpd
 
+st.header("Satelite Imagery")
 st.set_page_config(layout="wide")
+row1_col1, row1_col2 = st.columns([4, 1])
+
+Map = geemap.Map()
+
+def add_ee_layer(ee_image_object, vis_params, name):
+    Map.addLayer(ee_image_object, vis_params, name)
 
 def getSatelite(satelite, year, geometry):
-    # Import the image collection.
     sat_filtered = ee.ImageCollection(sat_names[satelite][0]) \
                     .filterDate(f'{year}-01-01', f'{year}-12-31') \
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
@@ -16,61 +22,70 @@ def getSatelite(satelite, year, geometry):
 
     return sat_filtered
 
-st.header("Satelite Imagery")
-
-sat_names = {"Landsat-9":["LANDSAT/LC08/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2014, 2024]],
-             "Sentinel-2":["COPERNICUS/S2_SR_HARMONIZED", ['B4', 'B3', 'B2'], [2018, 2024]]
+sat_names = {"Sentinel-2":["COPERNICUS/S2_SR_HARMONIZED", ['B4', 'B3', 'B2'], [2018, 2024]],
+            "Landsat-9":["LANDSAT/LC08/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2014, 2024]]
 }
 
-# Create an interactive map
-Map = geemap.Map()
+astana_geometry = ee.Geometry.Point(71.4306, 51.1694)
 
-row1_col1, row1_col2 = st.columns([4, 1])
 
-astana_geometry = ee.Geometry.Point(71.4306, 51.1694)  # Coordinates of the center of Astana
-
-# Set the map center and zoom level to Astana
-Map.centerObject(astana_geometry, zoom=12)  # Center the map on Astana with zoom level 12
+Map.centerObject(astana_geometry, zoom=12)
 
 
 
-# Add a dropdown list and checkbox to the second column.
+
 with row1_col2:
     sat = st.selectbox("Select a satelite", list(sat_names.keys()))
 
-    # Select the available years.
     years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
-    # years.insert(0, "Select a year")
     selected_year = st.selectbox("Select a year", years)
-    st.text(sat)
-    st.text(selected_year)
-
-
 
 if selected_year:
 
     Map.addLayer(getSatelite(sat, selected_year, astana_geometry), {'bands': sat_names[sat][1], 'min': 0, 'max': 3000}, sat + str(selected_year))
 
     with row1_col1:
-        Map.to_streamlit(height=600)
+        map_state = Map.to_streamlit(height=600)
 else:
     with row1_col1:
-        Map.to_streamlit(height=600)
+        map_state = Map.to_streamlit(height=600)
 
-# File uploader for Shapefiles
-uploaded_shp_file = st.sidebar.file_uploader("Shapefile", type=["shp"])
 
-# Создание вкладки "Загрузка Shapefile"
-if uploaded_shp_file is not None:
 
-    # Загрузка Shapefile в GeoDataFrame
-    gdf = gpd.read_file(uploaded_shp_file)
 
-    # Просмотр загруженных данных (опционально)
-    st.write("Пример первых строк данных:")
-    st.write(gdf.head())
 
-    # Дальнейшая обработка данных
-    # Здесь вы можете выполнять необходимые операции с GeoDataFrame gdf
+
+
+
+# Example layer (Landsat 7 image)
+image = ee.ImageCollection('LANDSAT/LE07/C01/T1_SR').filterDate('2000-01-01', '2000-12-31').first()
+vis_params = {'bands': ['B3', 'B2', 'B1'], 'min': 0, 'max': 3000}
+add_ee_layer(image, vis_params, 'Landsat 7 Image')
+
+
+
+
+# Function to clear selected layers
+def clear_layers(map_object):
+    layers_to_keep = ['OpenStreetMap']
+    layers_to_remove = [layer for layer in map_object.get_layer_names() if layer not in layers_to_keep]
+    for layer_name in layers_to_remove:
+        map_object.remove_layer(map_object.find_layer(layer_name))
+
+# Create a button to clear selected layers
+if st.button('Clear Selected Layers'):
+    # Preserve the current location and zoom level
+    current_location = map_state['center']
+    current_zoom = map_state['zoom']
+
+    # Clear the selected layers
+    clear_layers(Map)
+
+    # Reinitialize the map with preserved location and zoom level
+    Map = geemap.Map(center=current_location, zoom=current_zoom)
+    st.write("Selected layers cleared.")
+
+    # Display the map again
+    Map.to_streamlit(height=600)
 
 
