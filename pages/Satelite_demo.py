@@ -39,7 +39,8 @@ with row1_col2:
     sat = st.selectbox("Select a satelite", list(sat_names.keys()))
 
     # Select the available years.
-    years = list(None, range(sat_names[sat][2][0], sat_names[sat][2][1]))
+    years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
+    # years.insert(0, "Select a year")
     selected_year = st.selectbox("Select a year", years)
     st.text(sat)
     st.text(selected_year)
