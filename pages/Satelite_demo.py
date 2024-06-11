@@ -32,8 +32,8 @@ astana_geometry = ee.Geometry.Point(71.4306, 51.1694)
 
 Map.centerObject(astana_geometry, zoom=12)
 
-
-
+with row1_col1:
+    map_state = Map.to_streamlit(height=600)
 
 with row1_col2:
     sat = st.selectbox("Select a satelite", list(sat_names.keys()))
@@ -45,8 +45,7 @@ if st.button('Add layer:'):
 
     Map.addLayer(getSatelite(sat, selected_year, astana_geometry), {'bands': sat_names[sat][1], 'min': 0, 'max': 3000}, sat + str(selected_year))
 
-    with row1_col1:
-        map_state = Map.to_streamlit(height=600)
+
 
 
 
