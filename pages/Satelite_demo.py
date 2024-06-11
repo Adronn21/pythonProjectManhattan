@@ -11,8 +11,7 @@ row1_col1, row1_col2 = st.columns([4, 1])
 
 Map = geemap.Map()
 
-def add_ee_layer(ee_image_object, vis_params, name):
-    Map.addLayer(ee_image_object, vis_params, name)
+
 
 def getSatelite(satelite, year, geometry):
     sat_filtered = ee.ImageCollection(sat_names[satelite][0]) \
@@ -32,15 +31,7 @@ astana_geometry = ee.Geometry.Point(71.4306, 51.1694)
 
 Map.centerObject(astana_geometry, zoom=12)
 
-
-
-with row1_col2:
-    sat = st.selectbox("Select a satelite", list(sat_names.keys()))
-
-    years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
-    selected_year = st.selectbox("Select a year", years)
-
-if st.button('Add layer:'):
+if st.button('Add layer'):
 
     Map.addLayer(getSatelite(sat, selected_year, astana_geometry), {'bands': sat_names[sat][1], 'min': 0, 'max': 3000}, sat + str(selected_year))
     with row1_col1:
@@ -49,20 +40,11 @@ else:
     with row1_col1:
         map_state = Map.to_streamlit(height=600)
 
+with row1_col2:
+    sat = st.selectbox("Select a satelite", list(sat_names.keys()))
 
-
-
-
-
-
-
-
-
-# Example layer (Landsat 7 image)
-image = ee.ImageCollection('LANDSAT/LE07/C01/T1_SR').filterDate('2000-01-01', '2000-12-31').first()
-vis_params = {'bands': ['B3', 'B2', 'B1'], 'min': 0, 'max': 3000}
-add_ee_layer(image, vis_params, 'Landsat 7 Image')
-
+    years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
+    selected_year = st.selectbox("Select a year", years)
 
 
 
