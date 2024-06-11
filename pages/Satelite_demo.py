@@ -38,15 +38,16 @@ with row1_col2:
 
     years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
     selected_year = st.selectbox("Select a year", years)
-with row1_col1:
-    if st.button('Add layer'):
 
-        Map.addLayer(getSatelite(sat, selected_year, astana_geometry), {'bands': sat_names[sat][1], 'min': 0, 'max': 3000}, sat + str(selected_year))
-        with row1_col1:
-            map_state = Map.to_streamlit(height=600)
-    else:
-        with row1_col1:
-            map_state = Map.to_streamlit(height=600)
+if selected_year:
+
+    Map.addLayer(getSatelite(sat, selected_year, astana_geometry), {'bands': sat_names[sat][1], 'min': 0, 'max': 3000}, sat + str(selected_year))
+
+    with row1_col1:
+        map_state = Map.to_streamlit(height=600)
+else:
+    with row1_col1:
+        map_state = Map.to_streamlit(height=600)
 
 
 # Function to clear selected layers
