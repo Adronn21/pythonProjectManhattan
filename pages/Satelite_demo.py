@@ -56,7 +56,7 @@ def get_filtered_images(satellite, year, region):
 
     filtered_images = collection.filterBounds(region) \
         .filterDate(f'{year}-01-01', f'{year}-12-31')
-    if satellite == 'Sentinel2':
+    if satellite == 'Sentinel-2':
         return filtered_images.filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20))
     else:
         return filtered_images.map(lambda image: mask_clouds(image, satellite))
