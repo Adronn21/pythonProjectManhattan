@@ -69,11 +69,11 @@ else:
 
 
 
-def filter_clouds(dataset_name, start_date, end_date):
-    dataset = datasets[dataset_name]
-    collection = ee.ImageCollection(dataset['collection']).filterDate(start_date, end_date)
-    masked_collection = collection.map(dataset['cloud_mask'])
-    return masked_collection
+# def filter_clouds(dataset_name, start_date, end_date):
+#     dataset = datasets[dataset_name]
+#     collection = ee.ImageCollection(dataset['collection']).filterDate(start_date, end_date)
+#     masked_collection = collection.map(dataset['cloud_mask'])
+#     return masked_collection
 # Example usage
 # landsat7_filtered = filter_clouds('Landsat7', '2023-01-01', '2023-12-31')
 # landsat8_filtered = filter_clouds('Landsat8', '2023-01-01', '2023-12-31')
