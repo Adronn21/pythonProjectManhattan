@@ -67,7 +67,7 @@ else:
         map_state = Map.to_streamlit(height=600)
 
 if st.button("Clear"):
-    st.text('TEST')
+    st.text('TEST1')
 
 
 # def filter_clouds(dataset_name, start_date, end_date):
