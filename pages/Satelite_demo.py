@@ -11,54 +11,89 @@ row1_col1, row1_col2 = st.columns([4, 1])
 
 Map = geemap.Map()
 
-
-
-def getSatelite(satelite, year, geometry):
-    sat_filtered = ee.ImageCollection(sat_names[satelite][0]) \
-                    .filterDate(f'{year}-01-01', f'{year}-12-31') \
-                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
-                    .filterBounds(geometry) \
-                    .median()
-
-    return sat_filtered
-
-sat_names = {"Sentinel-2":["COPERNICUS/S2_SR_HARMONIZED", ['B4', 'B3', 'B2'], [2018, 2024]],
-            "Landsat-9":["LANDSAT/LC08/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2014, 2024]]
-}
+# Dictionary of datasets
 datasets = {
-    'Landsat7': {
+    'Landsat-7': {
         'collection': 'LANDSAT/LE07/C02/T1_L2',
-        'cloud_mask': lambda image: image.updateMask(image.select('QA_PIXEL').bitwiseAnd(1 << 3).eq(0))
+        'cloud_mask_band': 'QA_PIXEL',
+        'cloud_mask_value': 1 << 5 | 1 << 3,  # Cloud confidence & cloud
+        'rgb_bands': ['SR_B3', 'SR_B2', 'SR_B1'],  # Corrected RGB bands
+        'year_range': [2000, 2023]
+
     },
-    'Landsat8': {
+    'Landsat-8': {
         'collection': 'LANDSAT/LC08/C02/T1_L2',
-        'cloud_mask': lambda image: image.updateMask(image.select('QA_PIXEL').bitwiseAnd(1 << 3).eq(0))
+        'cloud_mask_band': 'QA_PIXEL',
+        'cloud_mask_value': 1 << 5 | 1 << 3,  # Cloud confidence & cloud
+        'rgb_bands': ['SR_B4', 'SR_B3', 'SR_B2'],  # Corrected RGB bands
+        'year_range': [2014, 2023]
     },
-    'Sentinel2': {
+    'Sentinel-2': {
         'collection': 'COPERNICUS/S2_SR_HARMONIZED',
-        'cloud_mask': lambda image: image.updateMask(image.select('QA60').bitwiseAnd(1 << 10).eq(0).And(image.select('QA60').bitwiseAnd(1 << 11).eq(0)))
+        'rgb_bands': ['B4', 'B3', 'B2'],
+        'year_range': [2018, 2023]
     },
     'MODIS': {
         'collection': 'MODIS/006/MOD09GA',
-        'cloud_mask': lambda image: image.updateMask(image.select('state_1km').bitwiseAnd(1 << 10).eq(0))
+        'cloud_mask_band': 'state_1km',
+        'cloud_mask_value': 1 << 10 | 1 << 11,  # Cloud state bits
+        'rgb_bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03'],
+        'year_range': [2001, 2022]
     }
 }
-astana_geometry = ee.Geometry.Point(71.4306, 51.1694)
 
 
-Map.centerObject(astana_geometry, zoom=12)
+def mask_clouds(image, dataset):
+    cloud_mask_band = datasets[dataset]['cloud_mask_band']
+    cloud_mask_value = datasets[dataset]['cloud_mask_value']
+    cloud_mask = image.select(cloud_mask_band).bitwiseAnd(cloud_mask_value).eq(0)
+    return image.updateMask(cloud_mask)
+
+
+def get_filtered_images(satellite, year, region):
+    dataset = datasets[satellite]
+    collection = ee.ImageCollection(dataset['collection'])
+
+    filtered_images = collection.filterBounds(region) \
+        .filterDate(f'{year}-01-01', f'{year}-12-31')
+    if satellite == 'Sentinel2':
+        return filtered_images.filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20))
+    else:
+        return filtered_images.map(lambda image: mask_clouds(image, satellite))
+
+
+def add_rgb_layer_to_map(m, satellite, year, region, brightness):
+    filtered_images = get_filtered_images(satellite, year, region)
+    median_image = filtered_images.median()
+    rgb_bands = datasets[satellite]['rgb_bands']
+
+    vis_params = {
+        'bands': rgb_bands,
+        'min': 0,
+        'max': brightness,
+        'gamma': 1.4
+    }
+
+    m.addLayer(median_image, vis_params, f'{satellite} {year} RGB')
+    m.centerObject(region, 10)
+
+
+
+region = ee.Geometry.Point([71.4306, 51.1694])
+
+Map.centerObject(region, zoom=12)
 
 
 
 with row1_col2:
-    sat = st.selectbox("Select a satelite", list(sat_names.keys()))
-
-    years = list(range(sat_names[sat][2][0], sat_names[sat][2][1]))
+    brightness = st.write('Set brightness')
+    sat = st.selectbox("Select a satelite", list(datasets.keys()))
+    years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
 
-if selected_year:
+if selected_year and sat and brightness:
 
-    Map.addLayer(getSatelite(sat, selected_year, astana_geometry), {'bands': sat_names[sat][1], 'min': 0, 'max': 3000}, sat + str(selected_year))
+    add_rgb_layer_to_map(Map, sat, selected_year, region, brightness)
 
     with row1_col1:
         map_state = Map.to_streamlit(height=600)
@@ -66,17 +101,15 @@ else:
     with row1_col1:
         map_state = Map.to_streamlit(height=600)
 
-if st.button("Clear"):
-    st.text('TEST1')
 
+uploaded_shp_file = st.sidebar.file_uploader("Shapefile", type=["shp"])
 
-# def filter_clouds(dataset_name, start_date, end_date):
-#     dataset = datasets[dataset_name]
-#     collection = ee.ImageCollection(dataset['collection']).filterDate(start_date, end_date)
-#     masked_collection = collection.map(dataset['cloud_mask'])
-#     return masked_collection
-# Example usage
-# landsat7_filtered = filter_clouds('Landsat7', '2023-01-01', '2023-12-31')
-# landsat8_filtered = filter_clouds('Landsat8', '2023-01-01', '2023-12-31')
-# sentinel2_filtered = filter_clouds('Sentinel2', '2023-01-01', '2023-12-31')
-# modis_filtered = filter_clouds('MODIS', '2023-01-01', '2023-12-31')
+# Создание вкладки "Загрузка Shapefile"
+if uploaded_shp_file is not None:
+
+    # Загрузка Shapefile в GeoDataFrame
+    gdf = gpd.read_file(uploaded_shp_file)
+
+    # Просмотр загруженных данных (опционально)
+    st.write("Пример первых строк данных:")
+    st.write(gdf.head())

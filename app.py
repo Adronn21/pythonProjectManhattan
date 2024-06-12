@@ -37,18 +37,3 @@ m = geemap.Map()
 m.add_basemap("OpenTopoMap")
 m.to_streamlit(height=500)
 
-# File uploader for Shapefiles
-uploaded_shp_file = st.sidebar.file_uploader("Shapefile", type=["shp"])
-
-# Создание вкладки "Загрузка Shapefile"
-if uploaded_shp_file is not None:
-
-    # Загрузка Shapefile в GeoDataFrame
-    gdf = gpd.read_file(uploaded_shp_file)
-
-    # Просмотр загруженных данных (опционально)
-    st.write("Пример первых строк данных:")
-    st.write(gdf.head())
-
-    # Дальнейшая обработка данных
-    # Здесь вы можете выполнять необходимые операции с GeoDataFrame gdf
