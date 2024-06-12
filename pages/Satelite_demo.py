@@ -25,7 +25,24 @@ def getSatelite(satelite, year, geometry):
 sat_names = {"Sentinel-2":["COPERNICUS/S2_SR_HARMONIZED", ['B4', 'B3', 'B2'], [2018, 2024]],
             "Landsat-9":["LANDSAT/LC08/C02/T1_L2", ['SR_B4', 'SR_B3', 'SR_B2'], [2014, 2024]]
 }
-
+datasets = {
+    'Landsat7': {
+        'collection': 'LANDSAT/LE07/C02/T1_L2',
+        'cloud_mask': lambda image: image.updateMask(image.select('QA_PIXEL').bitwiseAnd(1 << 3).eq(0))
+    },
+    'Landsat8': {
+        'collection': 'LANDSAT/LC08/C02/T1_L2',
+        'cloud_mask': lambda image: image.updateMask(image.select('QA_PIXEL').bitwiseAnd(1 << 3).eq(0))
+    },
+    'Sentinel2': {
+        'collection': 'COPERNICUS/S2_SR_HARMONIZED',
+        'cloud_mask': lambda image: image.updateMask(image.select('QA60').bitwiseAnd(1 << 10).eq(0).And(image.select('QA60').bitwiseAnd(1 << 11).eq(0)))
+    },
+    'MODIS': {
+        'collection': 'MODIS/006/MOD09GA',
+        'cloud_mask': lambda image: image.updateMask(image.select('state_1km').bitwiseAnd(1 << 10).eq(0))
+    }
+}
 astana_geometry = ee.Geometry.Point(71.4306, 51.1694)
 
 
@@ -50,27 +67,15 @@ else:
         map_state = Map.to_streamlit(height=600)
 
 
-# Function to clear selected layers
-def clear_layers(map_object):
-    layers_to_keep = ['OpenStreetMap']
-    layers_to_remove = [layer for layer in map_object.get_layer_names() if layer not in layers_to_keep]
-    for layer_name in layers_to_remove:
-        map_object.remove_layer(map_object.find_layer(layer_name))
-
-# Create a button to clear selected layers
-if st.button('Clear Selected Layers'):
-    # Preserve the current location and zoom level
-    current_location = map_state['center']
-    current_zoom = map_state['zoom']
-
-    # Clear the selected layers
-    clear_layers(Map)
-
-    # Reinitialize the map with preserved location and zoom level
-    Map = geemap.Map(center=current_location, zoom=current_zoom)
-    st.write("Selected layers cleared.")
-
-    # Display the map again
-    Map.to_streamlit(height=600)
 
 
+def filter_clouds(dataset_name, start_date, end_date):
+    dataset = datasets[dataset_name]
+    collection = ee.ImageCollection(dataset['collection']).filterDate(start_date, end_date)
+    masked_collection = collection.map(dataset['cloud_mask'])
+    return masked_collection
+# Example usage
+# landsat7_filtered = filter_clouds('Landsat7', '2023-01-01', '2023-12-31')
+# landsat8_filtered = filter_clouds('Landsat8', '2023-01-01', '2023-12-31')
+# sentinel2_filtered = filter_clouds('Sentinel2', '2023-01-01', '2023-12-31')
+# modis_filtered = filter_clouds('MODIS', '2023-01-01', '2023-12-31')
