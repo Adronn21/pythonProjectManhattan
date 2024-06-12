@@ -92,7 +92,6 @@ with row1_col2:
     selected_year = st.selectbox("Select a year", years)
 
 if selected_year and sat and brightness:
-
     add_rgb_layer_to_map(Map, sat, selected_year, region, brightness)
 
     with row1_col1:
