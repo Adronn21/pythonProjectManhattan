@@ -82,7 +82,7 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness):
     m.addLayer(median_image, vis_params, f'{satellite} {year} RGB')
     m.centerObject(region, 10)
 
-gdf=False
+
 # Upload a zipped shapefile
 uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
@@ -119,7 +119,7 @@ if uploaded_shp_file is not None:
             st.error("Shapefile (.shp) not found in the uploaded zip file.")
 
 
-if gdf:
+if not gdf.empty:
     region = ee.geometry.geemap.geopandas_to_ee(gdf)
 
     Map.centerObject(region, zoom=12)
