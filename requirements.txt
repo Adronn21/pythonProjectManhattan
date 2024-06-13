@@ -2,3 +2,4 @@ geemap
 streamlit
 xlrd
 geopandas
+matplotlib
