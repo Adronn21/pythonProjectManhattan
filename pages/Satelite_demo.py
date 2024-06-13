@@ -150,15 +150,16 @@ with row1_col2:
 
     index_name = st.selectbox("Select an index", indexes)
     check_index = st.checkbox("Add Index")
-
+    if check_index:
+        Map.addLayer(calcIndex(sat, index_name, selected_year, roi, clip),
+                     {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
 if selected_year and sat and roi:
     Map.centerObject(roi, zoom=12)
     add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
     Map.add_gdf(gdf, 'poligon')
     with row1_col1:
         Map.to_streamlit(height=600)
-        if check_index:
-            Map.addLayer(calcIndex(sat, index_name, selected_year, roi, clip), {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
+
 else:
     with row1_col1:
         Map.to_streamlit(height=600)
