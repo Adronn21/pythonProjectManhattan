@@ -46,7 +46,7 @@ datasets = {
     }
 }
 
-indexes = ["NDVI", "EVI","SAVI", "NDWI", "GNDVI", "NDRE", "MSAVI2", "ARVI", "PRI", "WBI"]
+indexes = ["NDVI", "NDWI","SAVI", "EVI", "GNDVI", "NDRE", "MSAVI2", "ARVI", "PRI", "WBI"]
 
 def mask_clouds(image, dataset):
     cloud_mask_band = datasets[dataset]['cloud_mask_band']
@@ -92,8 +92,8 @@ def calcIndex(satellite, index_name, year, region, clip):
         image = image.clip(region)
     if index_name == "NDVI":
         return image.normalizedDifference([datasets[satellite]['bands'][3], datasets[satellite]['bands'][0]]).rename('NDVI')
-    else:
-        return 0
+    elif index_name == "NDWI":
+        return image.normalizedDifference([datasets[satellite]['bands'][1], datasets[satellite]['bands'][3]]).rename('NDWI')
 
 
 
