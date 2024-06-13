@@ -137,4 +137,4 @@ if selected_year and sat and brightness and region:
         Map.to_streamlit(height=600)
 else:
     with row1_col1:
-        Map.to_streamlit(height=600)6
+        Map.to_streamlit(height=600)
