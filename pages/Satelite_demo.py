@@ -4,6 +4,9 @@ import geemap.foliumap as geemap
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from io import BytesIO
+import zipfile
+import tempfile
 
 st.set_page_config(layout="wide")
 st.header("Satelite Imagery")
@@ -102,23 +105,28 @@ else:
     with row1_col1:
         Map.to_streamlit(height=600)
 
+# Upload a zipped shapefile
+uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
-uploaded_shp_file = st.sidebar.file_uploader("Shapefile", type=["shp"])
-
-
-# Создание вкладки "Загрузка Shapefile"
 if uploaded_shp_file is not None:
-    gdf = gpd.read_file(uploaded_shp_file)
-    # Create the plot
-    fig, ax = plt.subplots()
-    gdf.plot(ax=ax)
+    # Extract the zip file
+    with tempfile.TemporaryDirectory() as tmpdir:
+        with zipfile.ZipFile(uploaded_shp_file, 'r') as zip_ref:
+            zip_ref.extractall(tmpdir)
 
-    # Save the plot to a file
-    plt.savefig('gdf_plot.png')
+        # Read the shapefile into a GeoDataFrame
+        gdf = gpd.read_file(tmpdir)
 
-    with row2_col1:
-        # Display the plot in Streamlit
-        st.image('gdf_plot.png', caption='Geopandas Plot')
-        # Загрузка Shapefile в GeoDataFrame
+        # Create the plot
+        fig, ax = plt.subplots()
+        gdf.plot(ax=ax)
+
+        # Save the plot to a BytesIO object
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+
+        with row2_col1:
+            st.image(buf, caption='Geopandas Plot')
 
 
