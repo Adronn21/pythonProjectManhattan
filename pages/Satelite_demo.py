@@ -67,7 +67,7 @@ def get_filtered_images(satellite, year, region):
         return filtered_images.map(lambda image: mask_clouds(image, satellite))
 
 
-def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip):
+def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
     filtered_images = get_filtered_images(satellite, year, region)
     median_image = filtered_images.median()
     if clip:
@@ -78,7 +78,7 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip):
         'bands': rgb_bands,
         'min': 0,
         'max': int(brightness)*1000,
-        'gamma': 1.4
+        'gamma': gamma
     }
 
     m.addLayer(median_image, vis_params, f'{satellite} {year} RGB')
@@ -128,14 +128,15 @@ if uploaded_shp_file is not None:
 
 with row1_col2:
     clip = st.checkbox("Clip image")
-    brightness = st.text_input("Set brightness")
+    brightness = st.text_input("Set brightness", value = 3)
+    gamma = st.text_input("Set gamma", value = 1.4)
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
 
-if selected_year and sat and brightness and region:
+if selected_year and sat and region:
     Map.centerObject(region, zoom=12)
-    add_rgb_layer_to_map(Map, sat, selected_year, region, brightness, clip)
+    add_rgb_layer_to_map(Map, sat, selected_year, region, brightness, clip, gamma)
     Map.add_gdf(gdf, 'poligon')
     with row1_col1:
         Map.to_streamlit(height=600)
