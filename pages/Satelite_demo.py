@@ -82,7 +82,7 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness):
     m.addLayer(median_image, vis_params, f'{satellite} {year} RGB')
     m.centerObject(region, 10)
 
-
+region = False
 # Upload a zipped shapefile
 uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
