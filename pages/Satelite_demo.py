@@ -67,9 +67,11 @@ def get_filtered_images(satellite, year, region):
         return filtered_images.map(lambda image: mask_clouds(image, satellite))
 
 
-def add_rgb_layer_to_map(m, satellite, year, region, brightness):
+def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip):
     filtered_images = get_filtered_images(satellite, year, region)
-    median_image = filtered_images.median().clip(region)
+    median_image = filtered_images.median()
+    if clip:
+        median_image = median_image.clip(region)
     rgb_bands = datasets[satellite]['rgb_bands']
 
     vis_params = {
@@ -125,6 +127,7 @@ if uploaded_shp_file is not None:
 
 
 with row1_col2:
+    clip = st.checkbox("Clip image")
     brightness = st.text_input("Set brightness")
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
@@ -132,7 +135,7 @@ with row1_col2:
 
 if selected_year and sat and brightness and region:
     Map.centerObject(region, zoom=12)
-    add_rgb_layer_to_map(Map, sat, selected_year, region, brightness)
+    add_rgb_layer_to_map(Map, sat, selected_year, region, brightness, clip)
     Map.add_gdf(gdf, 'poligon')
     with row1_col1:
         Map.to_streamlit(height=600)
