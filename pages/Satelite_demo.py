@@ -139,7 +139,6 @@ if uploaded_shp_file is not None:
             roi = geemap.geopandas_to_ee(gdf)
 
 
-
 with row1_col2:
     clip = st.checkbox("Clip image")
     brightness = st.text_input("Set brightness", value = 3)
