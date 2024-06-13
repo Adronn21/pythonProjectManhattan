@@ -139,7 +139,7 @@ if uploaded_shp_file is not None:
             roi = geemap.geopandas_to_ee(gdf)
 
 
-check_index = False
+
 with row1_col2:
     clip = st.checkbox("Clip image")
     brightness = st.text_input("Set brightness", value = 3)
@@ -149,7 +149,7 @@ with row1_col2:
     selected_year = st.selectbox("Select a year", years)
 
     index_name = st.selectbox("Select an index", indexes)
-
+    check_index = st.checkbox("Add Index")
 
 if selected_year and sat and roi:
     Map.centerObject(roi, zoom=12)
@@ -157,9 +157,8 @@ if selected_year and sat and roi:
     Map.add_gdf(gdf, 'poligon')
     with row1_col1:
         Map.to_streamlit(height=600)
-        if st.checkbox("Add Index"):
-            calculated_index = calcIndex(sat, index_name, selected_year, roi, clip)
-            Map.addLayer(calculated_index, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
+        if check_index:
+            Map.addLayer(calcIndex(sat, index_name, selected_year, roi, clip), {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
 else:
     with row1_col1:
         Map.to_streamlit(height=600)
