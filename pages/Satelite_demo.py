@@ -140,16 +140,19 @@ if uploaded_shp_file is not None:
 
 
 with row1_col2:
-    clip = st.checkbox("Clip image")
-    brightness = st.text_input("Set brightness", value = 3)
-    gamma = st.text_input("Set gamma", value = 1.4)
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
-    check_index = st.checkbox("Add Index")
+
+    clip = st.toggle("Clip image")
+
+    brightness = st.text_input("Set brightness", value = 3)
+    gamma = st.text_input("Set gamma", value = 1.4)
+
+    check_index = st.toggle("Add Index")
+    index_name = st.selectbox("Select an index", indexes)
     main_color = st.color_picker('Main color', value='#00ff00')
     secondary_color = st.color_picker("Secondary color", value='#0000ff')
-    index_name = st.selectbox("Select an index", indexes)
 
 if selected_year and sat and roi:
     Map.centerObject(roi, zoom=12)
