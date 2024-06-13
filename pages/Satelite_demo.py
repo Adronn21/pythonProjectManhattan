@@ -114,19 +114,30 @@ if uploaded_shp_file is not None:
         with zipfile.ZipFile(uploaded_shp_file, 'r') as zip_ref:
             zip_ref.extractall(tmpdir)
 
-        # Read the shapefile into a GeoDataFrame
-        gdf = gpd.read_file(tmpdir)
+        # Find the shapefile within the extracted files
+        shapefile_path = None
+        for root, dirs, files in os.walk(tmpdir):
+            for file in files:
+                if file.endswith(".shp"):
+                    shapefile_path = os.path.join(root, file)
+                    break
 
-        # Create the plot
-        fig, ax = plt.subplots()
-        gdf.plot(ax=ax)
+        if shapefile_path:
+            # Read the shapefile into a GeoDataFrame
+            gdf = gpd.read_file(shapefile_path)
 
-        # Save the plot to a BytesIO object
-        buf = BytesIO()
-        plt.savefig(buf, format='png')
-        buf.seek(0)
+            # Create the plot
+            fig, ax = plt.subplots()
+            gdf.plot(ax=ax)
 
-        with row2_col1:
+            # Save the plot to a BytesIO object
+            buf = BytesIO()
+            plt.savefig(buf, format='png')
+            buf.seek(0)
+
+            # Display the plot in Streamlit
             st.image(buf, caption='Geopandas Plot')
+        else:
+            st.error("Shapefile (.shp) not found in the uploaded zip file.")
 
 
