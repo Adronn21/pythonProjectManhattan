@@ -133,7 +133,7 @@ with row1_col2:
 if selected_year and sat and brightness and region:
     Map.centerObject(region, zoom=12)
     add_rgb_layer_to_map(Map, sat, selected_year, region, brightness)
-    st.text(brightness)
+    Map.add_gdf(region, 'poligon')
     with row1_col1:
         Map.to_streamlit(height=600)
 else:
