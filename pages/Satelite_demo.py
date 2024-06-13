@@ -147,7 +147,8 @@ with row1_col2:
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
-
+    main_color = st.selectbox("Main color", colors, value='green')
+    secondary_color=st.selectbox("Secondary color", colors, value='blue')
     index_name = st.selectbox("Select an index", indexes)
     check_index = st.checkbox("Add Index")
 
@@ -157,7 +158,7 @@ if selected_year and sat and roi:
     Map.add_gdf(gdf, 'poligon')
     if check_index:
         Map.addLayer(calcIndex(sat, index_name, selected_year, roi, clip),
-                     {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
+                     {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]}, 'Index')
     with row1_col1:
         Map.to_streamlit(height=600)
 

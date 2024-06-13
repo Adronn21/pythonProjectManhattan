@@ -28,7 +28,7 @@ with col1:
 
 # File uploader for Excel files
 uploaded_file = st.sidebar.file_uploader("Excel", type=["xlsx"])
-st.color_picker()
+st.color_picker('Pick a color')
 #
 # # Создание вкладки "Загрузка Excel-файла"
 # if uploaded_file is not None:
