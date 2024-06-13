@@ -143,3 +143,4 @@ if selected_year and sat and region:
 else:
     with row1_col1:
         Map.to_streamlit(height=600)
+
