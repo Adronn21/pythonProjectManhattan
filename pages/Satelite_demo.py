@@ -95,7 +95,7 @@ with row1_col2:
 
 if selected_year and sat and brightness:
     add_rgb_layer_to_map(Map, sat, selected_year, region, brightness)
-
+    st.text(brightness)
     with row1_col1:
         Map.to_streamlit(height=600)
 else:
