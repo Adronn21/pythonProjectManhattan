@@ -91,7 +91,7 @@ def calcIndex(satellite, index_name, year, region, clip):
     if clip:
         image = image.clip(region)
     if index_name == "NDVI":
-        return image.normalizedDifference([datasets[satellite][3], datasets[satellite][0]]).rename('NDVI')
+        return image.normalizedDifference([datasets[satellite]['bands'][3], datasets[satellite]['bands'][0]]).rename('NDVI')
     else:
         return 0
 
@@ -148,8 +148,6 @@ with row1_col2:
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
 
-    if selected_year and sat and roi:
-        check_index = st.checkbox("Add index")
 
 if selected_year and sat and roi:
     Map.centerObject(roi, zoom=12)
@@ -162,7 +160,7 @@ else:
         Map.to_streamlit(height=600)
 
 with row2_col2:
-    if check_index:
-        index_name = st.selectbox("Select an index", indexes)
+    index_name = st.selectbox("Select an index", indexes)
+    if st.button("Add Index"):
         calculated_index = calcIndex(sat, index_name, selected_year, roi, clip)
         Map.addLayer(calculated_index, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
