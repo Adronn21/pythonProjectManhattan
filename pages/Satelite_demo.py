@@ -88,7 +88,7 @@ Map.centerObject(region, zoom=12)
 
 
 with row1_col2:
-    brightness = st.text_input("Set brightness",min_value=0, max_value=100, value=3)
+    brightness = st.slider("Set brightness",min_value=0, max_value=100, value=3)
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
