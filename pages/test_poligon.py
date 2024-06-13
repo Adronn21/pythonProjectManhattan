@@ -28,18 +28,18 @@ with col1:
 
 # File uploader for Excel files
 uploaded_file = st.sidebar.file_uploader("Excel", type=["xlsx"])
-
-
-# Создание вкладки "Загрузка Excel-файла"
-if uploaded_file is not None:
-    # Чтение данных из Excel-файла
-    xls = pd.ExcelFile(uploaded_file)
-
-    # Выбор листа из файла Excel
-    sheet_name = st.sidebar.selectbox("Выберите лист", xls.sheet_names)
-
-    # Предполагаем, что данные находятся на выбранном листе
-    df = xls.parse(sheet_name)
+st.color_picker()
+#
+# # Создание вкладки "Загрузка Excel-файла"
+# if uploaded_file is not None:
+#     # Чтение данных из Excel-файла
+#     xls = pd.ExcelFile(uploaded_file)
+#
+#     # Выбор листа из файла Excel
+#     sheet_name = st.sidebar.selectbox("Выберите лист", xls.sheet_names)
+#
+#     # Предполагаем, что данные находятся на выбранном листе
+#     df = xls.parse(sheet_name)
 
     # # Удаление столбца с именем "Год" (замените его на имя вашего столбца)
     # if "Год" in df.columns:
