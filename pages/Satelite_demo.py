@@ -146,10 +146,10 @@ with row1_col2:
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
+    check_index = st.checkbox("Add Index")
     main_color = st.color_picker('Main color', value='#00ff00')
     secondary_color = st.color_picker("Secondary color", value='#0000ff')
     index_name = st.selectbox("Select an index", indexes)
-    check_index = st.checkbox("Add Index")
 
 if selected_year and sat and roi:
     Map.centerObject(roi, zoom=12)
