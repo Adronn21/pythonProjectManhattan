@@ -159,7 +159,7 @@ else:
     with row1_col1:
         Map.to_streamlit(height=600)
 
-with row2_col2:
+with row2_col1:
     index_name = st.selectbox("Select an index", indexes)
     if st.button("Add Index"):
         calculated_index = calcIndex(sat, index_name, selected_year, roi, clip)
