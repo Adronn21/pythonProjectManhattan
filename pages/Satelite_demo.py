@@ -62,14 +62,14 @@ def get_filtered_images(satellite, year, region):
         .filterDate(f'{year}-01-01', f'{year}-12-31')
     if satellite == 'Sentinel-2':
         return filtered_images.filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
-                            .filter(ee.Filter.lt('SNOW_ICE_PERCENTAGE', 20)).clip()
+                            .filter(ee.Filter.lt('SNOW_ICE_PERCENTAGE', 20))
     else:
         return filtered_images.map(lambda image: mask_clouds(image, satellite))
 
 
 def add_rgb_layer_to_map(m, satellite, year, region, brightness):
     filtered_images = get_filtered_images(satellite, year, region)
-    median_image = filtered_images.median()
+    median_image = filtered_images.median().clip(region)
     rgb_bands = datasets[satellite]['rgb_bands']
 
     vis_params = {
