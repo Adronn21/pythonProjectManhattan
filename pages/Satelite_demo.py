@@ -159,7 +159,7 @@ if selected_year and sat and roi:
         index_name = st.selectbox("Select an index", indexes)
         if st.checkbox("Add Index"):
             calculated_index = calcIndex(sat, index_name, selected_year, roi, clip)
-            Map.addLayer(calculated_index, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'white']}, 'Index')
+            Map.addLayer(calculated_index, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
 else:
     with row1_col1:
         Map.to_streamlit(height=600)
