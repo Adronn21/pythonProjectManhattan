@@ -71,7 +71,7 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness):
     vis_params = {
         'bands': rgb_bands,
         'min': 0,
-        'max': brightness*1000,
+        'max': brightness,
         'gamma': 1.4
     }
 
