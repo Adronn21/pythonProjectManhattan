@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import zipfile
 import tempfile
+import os
 
 st.set_page_config(layout="wide")
 st.header("Satelite Imagery")
