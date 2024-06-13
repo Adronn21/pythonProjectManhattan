@@ -3,7 +3,7 @@ import streamlit as st
 import geemap.foliumap as geemap
 import pandas as pd
 import geopandas as gpd
-
+import matplotlib as plt
 
 st.set_page_config(layout="wide")
 st.header("Satelite Imagery")
@@ -105,11 +105,19 @@ else:
 
 uploaded_shp_file = st.sidebar.file_uploader("Shapefile", type=["shp"])
 
+
 # Создание вкладки "Загрузка Shapefile"
 if uploaded_shp_file is not None:
-
-    # Загрузка Shapefile в GeoDataFrame
     gdf = gpd.read_file(uploaded_shp_file)
+    # Create the plot
+    fig, ax = plt.subplots()
+    gdf.plot(ax=ax)
+
+    # Save the plot to a file
+    plt.savefig('gdf_plot.png')
+
     with row2_col1:
-        gdf.plot().to_streamlit(height=600)
+        # Display the plot in Streamlit
+        st.image('gdf_plot.png', caption='Geopandas Plot')
+        # Загрузка Shapefile в GeoDataFrame
 
