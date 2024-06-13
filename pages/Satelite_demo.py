@@ -71,7 +71,7 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness):
     vis_params = {
         'bands': rgb_bands,
         'min': 0,
-        'max': brightness,
+        'max': brightness*1000,
         'gamma': 1.4
     }
 
@@ -88,7 +88,7 @@ Map.centerObject(region, zoom=12)
 
 
 with row1_col2:
-    brightness = st.text_input("Set brightness")
+    brightness = st.slider("Set brightness", range(0, 100))
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
