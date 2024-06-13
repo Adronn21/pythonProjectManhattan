@@ -120,7 +120,7 @@ if uploaded_shp_file is not None:
 
 
         if not gdf.empty:
-            region = ee.geometry.geemap.geopandas_to_ee(gdf)
+            region = geemap.geopandas_to_ee(gdf)
 
 
 with row1_col2:
