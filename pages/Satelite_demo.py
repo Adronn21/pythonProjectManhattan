@@ -83,29 +83,6 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness):
     m.centerObject(region, 10)
 
 
-
-
-region = ee.Geometry.Point([71.4306, 51.1694])
-
-Map.centerObject(region, zoom=12)
-
-
-
-with row1_col2:
-    brightness = st.text_input("Set brightness")
-    sat = st.selectbox("Select a satelite", list(datasets.keys()))
-    years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
-    selected_year = st.selectbox("Select a year", years)
-
-if selected_year and sat and brightness:
-    add_rgb_layer_to_map(Map, sat, selected_year, region, brightness)
-    st.text(brightness)
-    with row1_col1:
-        Map.to_streamlit(height=600)
-else:
-    with row1_col1:
-        Map.to_streamlit(height=600)
-
 # Upload a zipped shapefile
 uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
@@ -142,3 +119,22 @@ if uploaded_shp_file is not None:
             st.error("Shapefile (.shp) not found in the uploaded zip file.")
 
 
+if gdf:
+    region = ee.geometry.geemap.geopandas_to_ee(gdf)
+
+    Map.centerObject(region, zoom=12)
+
+with row1_col2:
+    brightness = st.text_input("Set brightness")
+    sat = st.selectbox("Select a satelite", list(datasets.keys()))
+    years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
+    selected_year = st.selectbox("Select a year", years)
+
+if selected_year and sat and brightness and region:
+    add_rgb_layer_to_map(Map, sat, selected_year, region, brightness)
+    st.text(brightness)
+    with row1_col1:
+        Map.to_streamlit(height=600)
+else:
+    with row1_col1:
+        Map.to_streamlit(height=600)6
