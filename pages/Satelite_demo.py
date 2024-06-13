@@ -161,6 +161,6 @@ else:
 
 with row2_col2:
     if selected_year and sat and roi and check_index:
-        index_name = st.selectbox("Select an index", list(datasets.keys()))
+        index_name = st.selectbox("Select an index", indexes)
         calculated_index = calcIndex(sat, index_name, selected_year, roi, clip)
         Map.addLayer(calculated_index, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
