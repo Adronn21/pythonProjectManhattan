@@ -21,31 +21,32 @@ datasets = {
     'Landsat-7': {
         'collection': 'LANDSAT/LE07/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
-        'cloud_mask_value': 1 << 5 | 1 << 3,  # Cloud confidence & cloud
-        'rgb_bands': ['SR_B3', 'SR_B2', 'SR_B1'],  # Corrected RGB bands
+        'cloud_mask_value': 1 << 5 | 1 << 3,
+        'bands': ['SR_B3', 'SR_B2', 'SR_B1', ],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
         'year_range': [2000, 2023]
     },
     'Landsat-8': {
         'collection': 'LANDSAT/LC08/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
-        'cloud_mask_value': 1 << 5 | 1 << 3,  # Cloud confidence & cloud
-        'rgb_bands': ['SR_B4', 'SR_B3', 'SR_B2'],  # Corrected RGB bands
+        'cloud_mask_value': 1 << 5 | 1 << 3,
+        'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5"],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
         'year_range': [2014, 2023]
     },
     'Sentinel-2': {
         'collection': 'COPERNICUS/S2_SR_HARMONIZED',
-        'rgb_bands': ['B4', 'B3', 'B2'],
+        'bands': ['B4', 'B3', 'B2', 'B8'],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
         'year_range': [2019, 2023]
     },
     'MODIS': {
         'collection': 'MODIS/006/MOD09GA',
         'cloud_mask_band': 'state_1km',
-        'cloud_mask_value': 1 << 10 | 1 << 11,  # Cloud state bits
-        'rgb_bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03'],
+        'cloud_mask_value': 1 << 10 | 1 << 11,
+        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03'],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
         'year_range': [2001, 2022]
     }
 }
 
+indexes = ["NDVI", "EVI","SAVI", "NDWI", "GNDVI", "NDRE", "MSAVI2", "ARVI", "PRI", "WBI"]
 
 def mask_clouds(image, dataset):
     cloud_mask_band = datasets[dataset]['cloud_mask_band']
@@ -72,7 +73,7 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
     median_image = filtered_images.median()
     if clip:
         median_image = median_image.clip(region)
-    rgb_bands = datasets[satellite]['rgb_bands']
+    rgb_bands = [datasets[satellite]['bands'][i] for i in range(0, 3)]
 
     vis_params = {
         'bands': rgb_bands,
@@ -84,7 +85,20 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
     m.addLayer(median_image, vis_params, f'{satellite} {year} RGB')
     m.centerObject(region, 10)
 
-region = False
+def calcIndex(satellite, index_name, year, region, clip):
+    filtered_images = get_filtered_images(satellite, year, region)
+    image = filtered_images.median()
+    if clip:
+        image = image.clip(region)
+    if index_name == "NDVI":
+        return image.normalizedDifference([datasets[satellite][3], datasets[satellite][0]]).rename('NDVI')
+    else:
+        return 0
+
+
+
+
+roi = False
 # Upload a zipped shapefile
 uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
@@ -122,7 +136,7 @@ if uploaded_shp_file is not None:
 
 
         if not gdf.empty:
-            region = geemap.geopandas_to_ee(gdf)
+            roi = geemap.geopandas_to_ee(gdf)
 
 
 
@@ -133,10 +147,11 @@ with row1_col2:
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
+    check_index = st.checkbox("Add index")
 
-if selected_year and sat and region:
-    Map.centerObject(region, zoom=12)
-    add_rgb_layer_to_map(Map, sat, selected_year, region, brightness, clip, gamma)
+if selected_year and sat and roi:
+    Map.centerObject(roi, zoom=12)
+    add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
     Map.add_gdf(gdf, 'poligon')
     with row1_col1:
         Map.to_streamlit(height=600)
@@ -144,3 +159,8 @@ else:
     with row1_col1:
         Map.to_streamlit(height=600)
 
+with row2_col2:
+    if selected_year and sat and roi and check_index:
+        index_name = st.selectbox("Select an index", list(datasets.keys()))
+        calculated_index = calcIndex(sat, index_name, selected_year, roi, clip)
+        Map.addLayer(calculated_index, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
