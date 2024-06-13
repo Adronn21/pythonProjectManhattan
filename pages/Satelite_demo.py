@@ -123,6 +123,7 @@ if uploaded_shp_file is not None:
             region = geemap.geopandas_to_ee(gdf)
 
 
+
 with row1_col2:
     brightness = st.text_input("Set brightness")
     sat = st.selectbox("Select a satelite", list(datasets.keys()))
