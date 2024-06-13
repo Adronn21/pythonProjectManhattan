@@ -148,10 +148,6 @@ with row1_col2:
     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
     selected_year = st.selectbox("Select a year", years)
 
-    index_name = st.selectbox("Select an index", indexes)
-    if st.checkbox("Add Index"):
-        calculated_index = calcIndex(sat, index_name, selected_year, roi, clip)
-        Map.addLayer(calculated_index, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Index')
 
 if selected_year and sat and roi:
     Map.centerObject(roi, zoom=12)
@@ -164,7 +160,7 @@ else:
         Map.to_streamlit(height=600)
 
 with row1_col2:
-    ndex_name = st.selectbox("Select an index", indexes)
+    index_name = st.selectbox("Select an index", indexes)
     if st.checkbox("Add Index"):
         calculated_index = calcIndex(sat, index_name, selected_year, roi, clip)
         Map.addLayer(calculated_index, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'brown']}, 'Index')
