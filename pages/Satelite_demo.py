@@ -22,7 +22,7 @@ datasets = {
         'collection': 'LANDSAT/LE07/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
         'cloud_mask_value': 1 << 5 | 1 << 3,
-        'bands': ['SR_B3', 'SR_B2', 'SR_B1', ],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
+        'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4' ],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
         'year_range': [2000, 2023]
     },
     'Landsat-8': {
@@ -41,7 +41,7 @@ datasets = {
         'collection': 'MODIS/006/MOD09GA',
         'cloud_mask_band': 'state_1km',
         'cloud_mask_value': 1 << 10 | 1 << 11,
-        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03'],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
+        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b05'],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
         'year_range': [2001, 2022]
     }
 }
