@@ -8,6 +8,7 @@ import geopandas as gpd
 st.set_page_config(layout="wide")
 st.header("Satelite Imagery")
 row1_col1, row1_col2 = st.columns([4, 1])
+row2_col1, row2_col2 = st.columns([4, 1])
 
 Map = geemap.Map()
 
@@ -19,7 +20,6 @@ datasets = {
         'cloud_mask_value': 1 << 5 | 1 << 3,  # Cloud confidence & cloud
         'rgb_bands': ['SR_B3', 'SR_B2', 'SR_B1'],  # Corrected RGB bands
         'year_range': [2000, 2023]
-
     },
     'Landsat-8': {
         'collection': 'LANDSAT/LC08/C02/T1_L2',
@@ -31,7 +31,7 @@ datasets = {
     'Sentinel-2': {
         'collection': 'COPERNICUS/S2_SR_HARMONIZED',
         'rgb_bands': ['B4', 'B3', 'B2'],
-        'year_range': [2018, 2023]
+        'year_range': [2019, 2023]
     },
     'MODIS': {
         'collection': 'MODIS/006/MOD09GA',
@@ -80,6 +80,7 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness):
 
 
 
+
 region = ee.Geometry.Point([71.4306, 51.1694])
 
 Map.centerObject(region, zoom=12)
@@ -96,10 +97,10 @@ if selected_year and sat and brightness:
     add_rgb_layer_to_map(Map, sat, selected_year, region, brightness)
 
     with row1_col1:
-        map_state = Map.to_streamlit(height=600)
+        Map.to_streamlit(height=600)
 else:
     with row1_col1:
-        map_state = Map.to_streamlit(height=600)
+        Map.to_streamlit(height=600)
 
 
 uploaded_shp_file = st.sidebar.file_uploader("Shapefile", type=["shp"])
@@ -109,7 +110,6 @@ if uploaded_shp_file is not None:
 
     # Загрузка Shapefile в GeoDataFrame
     gdf = gpd.read_file(uploaded_shp_file)
+    with row2_col1:
+        gdf.plot().to_streamlit(height=600)
 
-    # Просмотр загруженных данных (опционально)
-    st.write("Пример первых строк данных:")
-    st.write(gdf.head())
