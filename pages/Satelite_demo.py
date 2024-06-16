@@ -186,7 +186,7 @@ if selected_year and sat and roi:
     Map.add_gdf(gdf, 'poligon')
     if check_index:
         Map.addLayer(calcIndex(sat, index_name, selected_year, roi, clip),
-                     {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]}, f'{indexes[index_name]},{sat} {selected_year}')
+                     {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]}, f'{index_name},{sat} {selected_year}')
     with row1_col1:
         Map.to_streamlit(height=600)
 
