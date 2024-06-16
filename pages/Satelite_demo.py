@@ -113,8 +113,13 @@ def calcIndex(satellite, index_name, year, region, clip):
     elif index_name == "NDWI":
         return image.normalizedDifference([blue_band, nir_band]).rename('NDWI')
     elif index_name == "SAVI":
-        expression = indexes["SAVI"].format(NIR=nir_band, RED=red_band, L=0.5)
-        return image.expression(expression).rename('SAVI')
+        return image.expression(indexes["SAVI"], {
+                'NIR': image.select(nir_band),
+                'RED': image.select(red_band),
+                'L': 0.5
+            }).rename('SAVI')
+    else:
+        raise ValueError(f"Index {index_name} not supported.")
 
 
 
