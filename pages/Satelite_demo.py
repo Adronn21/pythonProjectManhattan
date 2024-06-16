@@ -187,7 +187,7 @@ def main():
         brightness = st.text_input("Set brightness", value='3')
         gamma = st.text_input("Set gamma", value='1.4')
 
-        check_index = st.checkbox("Add Index")
+        check_index = st.button("Add Index")
         index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
         main_color = st.color_picker('Main color', value='#00ff00')
         secondary_color = st.color_picker("Secondary color", value='#0000ff')
