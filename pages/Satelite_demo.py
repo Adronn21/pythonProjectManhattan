@@ -202,7 +202,7 @@ def main():
 
         # Clear existing layers if they exist
 
-        added_layers.clear()
+        # added_layers.clear()
 
         # Add RGB layer
         rgb_layer = add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
