@@ -25,6 +25,8 @@ def main():
     row2_col1, row2_col2 = st.columns([4, 1])
 
     # Initialize Map if not already initialized
+    if 'added_layers' not in st.session_state:
+        st.session_state.added_layers = []
 
     Map = geemap.Map()
 
