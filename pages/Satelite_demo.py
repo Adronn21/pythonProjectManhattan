@@ -46,8 +46,20 @@ datasets = {
     }
 }
 
-indexes = ["NDVI", "NDWI", "SAVI", "EVI", "GNDVI", "NDRE", "MSAVI2", "ARVI", "PRI", "WBI"]
+# indexes = ["NDVI", "NDWI", "SAVI", "EVI", "GNDVI", "NDRE", "MSAVI2", "ARVI", "PRI", "WBI"]
 
+indexes = {
+    "NDVI": "(NIR - RED) / (NIR + RED)",
+    "EVI": "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))",
+    "SAVI": "(({} - {}) / ({} + {} + L)) * (1 + L)",
+    "NDWI": "(GREEN - NIR) / (GREEN + NIR)",
+    "GNDVI": "(NIR - GREEN) / (NIR + GREEN)",
+    "NDRE": "(NIR - RED_EDGE) / (NIR + RED_EDGE)",
+    "MSAVI2": "((2 * NIR + 1) - sqrt((2 * NIR + 1)^2 - 8 * (NIR - RED))) / 2",
+    "ARVI": "(NIR - (2 * RED - BLUE)) / (NIR + (2 * RED - BLUE))",
+    "PRI": "(RED - BLUE) / (RED + BLUE)",
+    "WBI": "NIR / GREEN"
+}
 def mask_clouds(image, dataset):
     cloud_mask_band = datasets[dataset]['cloud_mask_band']
     cloud_mask_value = datasets[dataset]['cloud_mask_value']
@@ -88,19 +100,20 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
 def calcIndex(satellite, index_name, year, region, clip):
     filtered_images = get_filtered_images(satellite, year, region)
     image = filtered_images.median()
+    red_band = datasets[satellite]['bands'][0]
+    blue_band = datasets[satellite]['bands'][1]
+    green_band = datasets[satellite]['bands'][2]
+    nir_band = datasets[satellite]['bands'][3]
+
     if clip:
         image = image.clip(region)
+
     if index_name == "NDVI":
-        return image.normalizedDifference([datasets[satellite]['bands'][3], datasets[satellite]['bands'][0]]).rename('NDVI')
+        return image.normalizedDifference([nir_band, red_band]).rename('NDVI')
     elif index_name == "NDWI":
-        return image.normalizedDifference([datasets[satellite]['bands'][1], datasets[satellite]['bands'][3]]).rename('NDWI')
+        return image.normalizedDifference([blue_band, nir_band]).rename('NDWI')
     elif index_name == "SAVI":
-        return image.expression(
-                indexes["SAVI"], {
-                    'NIR': datasets[satellite]['bands'][3],
-                    'RED': datasets[satellite]['bands'][0],
-                    'L': 0.5
-                }).rename('SAVI')
+        return image.expression(indexes["SAVI"].format(nir_band, red_band, nir_band, red_band), {'L': 0.5}).rename('SAVI')
 
 
 
