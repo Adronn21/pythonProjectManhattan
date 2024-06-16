@@ -51,7 +51,7 @@ datasets = {
 indexes = {
     "NDVI": "(NIR - RED) / (NIR + RED)",
     "EVI": "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))",
-    "SAVI": "(({} - {}) / ({} + {} + L)) * (1 + L)",
+    "SAVI": "((NIR - RED) / (NIR + RED + L)) * (1 + L)",
     "NDWI": "(GREEN - NIR) / (GREEN + NIR)",
     "GNDVI": "(NIR - GREEN) / (NIR + GREEN)",
     "NDRE": "(NIR - RED_EDGE) / (NIR + RED_EDGE)",
@@ -100,10 +100,10 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
 def calcIndex(satellite, index_name, year, region, clip):
     filtered_images = get_filtered_images(satellite, year, region)
     image = filtered_images.median()
-    red_band = image.select(datasets[satellite]['bands'][0])
+    red_band = datasets[satellite]['bands'][0]
     blue_band = datasets[satellite]['bands'][1]
     green_band = datasets[satellite]['bands'][2]
-    nir_band = image.select(datasets[satellite]['bands'][3])
+    nir_band = datasets[satellite]['bands'][3]
 
     if clip:
         image = image.clip(region)
@@ -113,7 +113,8 @@ def calcIndex(satellite, index_name, year, region, clip):
     elif index_name == "NDWI":
         return image.normalizedDifference([blue_band, nir_band]).rename('NDWI')
     elif index_name == "SAVI":
-        return image.expression(indexes["SAVI"].format(nir_band, red_band, nir_band, red_band), {'L': 0.5}).rename('SAVI')
+        expression = indexes["SAVI"].format(NIR=nir_band, RED=red_band, L=0.5)
+        return image.expression(expression).rename('SAVI')
 
 
 
