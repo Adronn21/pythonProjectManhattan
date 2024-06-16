@@ -8,8 +8,8 @@ import zipfile
 import tempfile
 import os
 
-
-
+# Initialize Earth Engine
+ee.Initialize()
 
 # Function to run once when page loads
 def setup():
@@ -56,8 +56,7 @@ def main():
         }
     }
 
-    # indexes = ["NDVI", "NDWI", "SAVI", "EVI", "GNDVI", "NDRE", "MSAVI2", "ARVI", "PRI", "WBI"]
-
+    # Index definitions
     indexes = {
         "NDVI": "(NIR - RED) / (NIR + RED)",
         "EVI": "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))",
@@ -71,12 +70,14 @@ def main():
         "WBI": "NIR / GREEN"
     }
 
+    # Function to mask clouds
     def mask_clouds(image, dataset):
         cloud_mask_band = datasets[dataset]['cloud_mask_band']
         cloud_mask_value = datasets[dataset]['cloud_mask_value']
         cloud_mask = image.select(cloud_mask_band).bitwiseAnd(cloud_mask_value).eq(0)
         return image.updateMask(cloud_mask)
 
+    # Function to get filtered images
     def get_filtered_images(satellite, year, region):
         dataset = datasets[satellite]
         collection = ee.ImageCollection(dataset['collection'])
@@ -89,6 +90,7 @@ def main():
         else:
             return filtered_images.map(lambda image: mask_clouds(image, satellite))
 
+    # Function to add RGB layer to map
     def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
         filtered_images = get_filtered_images(satellite, year, region)
         median_image = filtered_images.median()
@@ -103,10 +105,12 @@ def main():
             'gamma': gamma
         }
 
-        m.addLayer(median_image, vis_params, f'{satellite} {year} RGB')
+        layer = m.addLayer(median_image, vis_params, f'{satellite} {year} RGB')
         m.centerObject(region, 10)
+        return layer
 
-    def calcIndex(satellite, index_name, year, region, clip):
+    # Function to calculate index
+    def calc_index(satellite, index_name, year, region, clip):
         filtered_images = get_filtered_images(satellite, year, region)
         image = filtered_images.median()
         red_band = datasets[satellite]['bands'][0]
@@ -118,11 +122,11 @@ def main():
             image = image.clip(region)
 
         if index_name == "NDVI":
-            return image.normalizedDifference([nir_band, red_band]).rename('NDVI')
+            index = image.normalizedDifference([nir_band, red_band]).rename('NDVI')
         elif index_name == "NDWI":
-            return image.normalizedDifference([blue_band, nir_band]).rename('NDWI')
+            index = image.normalizedDifference([blue_band, nir_band]).rename('NDWI')
         elif index_name == "SAVI":
-            return image.expression(indexes["SAVI"], {
+            index = image.expression(indexes["SAVI"], {
                 'NIR': image.select(nir_band),
                 'RED': image.select(red_band),
                 'L': 0.5
@@ -130,7 +134,11 @@ def main():
         else:
             raise ValueError(f"Index {index_name} not supported.")
 
-    roi = False
+        return index
+
+    roi = None
+    added_layers = []  # List to store added layers
+
     # Upload a zipped shapefile
     uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
@@ -174,24 +182,44 @@ def main():
         years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
         selected_year = st.selectbox("Select a year", years)
 
-        clip = st.toggle("Clip image")
+        clip = st.checkbox("Clip image", value=True)
 
-        brightness = st.text_input("Set brightness", value=3)
-        gamma = st.text_input("Set gamma", value=1.4)
+        brightness = st.text_input("Set brightness", value='3')
+        gamma = st.text_input("Set gamma", value='1.4')
 
-        check_index = st.toggle("Add Index")
-        index_name = st.selectbox("Select an index", indexes.keys())
+        check_index = st.checkbox("Add Index")
+        index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
         main_color = st.color_picker('Main color', value='#00ff00')
         secondary_color = st.color_picker("Secondary color", value='#0000ff')
 
+        # Manage added layers
+        if 'added_layers' not in st.session_state:
+            st.session_state.added_layers = []
+
+        # Display current layers and allow removal
+        st.write("**Current Layers:**")
+        for layer_id, layer_info in enumerate(st.session_state.added_layers):
+            st.write(f"{layer_id + 1}. {layer_info['name']}")
+
+        if st.button("Remove Selected Layer"):
+            selected_layers = st.multiselect("Select layers to remove", range(1, len(st.session_state.added_layers) + 1))
+            selected_layers = [int(x) - 1 for x in selected_layers]  # Convert to zero-based index
+            for index in sorted(selected_layers, reverse=True):
+                removed_layer = st.session_state.added_layers.pop(index)
+                Map.remove_layer(removed_layer['layer'])
+
     if selected_year and sat and roi:
         Map.centerObject(roi, zoom=12)
-        add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
+        rgb_layer = add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
+        st.session_state.added_layers.append({'name': f'{sat} {selected_year} RGB', 'layer': rgb_layer})
         Map.add_gdf(gdf, 'polygon')
+
         if check_index:
-            Map.addLayer(calcIndex(sat, index_name, selected_year, roi, clip),
-                         {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
-                         f'{index_name},{sat} {selected_year}')
+            index_layer = Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
+                                       {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
+                                       f'{index_name},{sat} {selected_year}')
+            st.session_state.added_layers.append({'name': f'{index_name},{sat} {selected_year}', 'layer': index_layer})
+
         with row1_col1:
             Map.to_streamlit(height=600)
 
