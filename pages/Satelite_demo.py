@@ -24,7 +24,12 @@ def main():
     row1_col1, row1_col2 = st.columns([4, 1])
     row2_col1, row2_col2 = st.columns([4, 1])
 
-    Map = geemap.Map()
+    # Initialize Map if not already initialized
+    if 'map' not in st.session_state:
+        st.session_state.map = geemap.Map()
+        st.session_state.added_layers = []
+
+    Map = st.session_state.map
 
     # Dictionary of datasets
     datasets = {
@@ -137,7 +142,7 @@ def main():
         return index
 
     roi = None
-    added_layers = []  # List to store added layers
+    added_layers = st.session_state.added_layers  # Retrieve added layers from session state
 
     # Upload a zipped shapefile
     uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
@@ -178,54 +183,45 @@ def main():
                 roi = geemap.geopandas_to_ee(gdf)
 
     with row1_col2:
-        sat = st.selectbox("Select a satellite", list(datasets.keys()))
-        years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
-        selected_year = st.selectbox("Select a year", years)
+        sat = st.selectbox("Select a satellite", list(datasets.keys()), index=0)
+        years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1] + 1))
+        selected_year = st.selectbox("Select a year", years, index=len(years) - 1)
 
-        clip = st.checkbox("Clip image", value=True)
+        clip = st.checkbox("Clip image")
 
         brightness = st.text_input("Set brightness", value='3')
         gamma = st.text_input("Set gamma", value='1.4')
 
-        check_index = st.button("Add Index")
-        index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
-        main_color = st.color_picker('Main color', value='#00ff00')
-        secondary_color = st.color_picker("Secondary color", value='#0000ff')
+        check_index = st.checkbox("Add Index")
+        if check_index:
+            index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
+            main_color = st.color_picker('Main color', value='#00ff00')
+            secondary_color = st.color_picker("Secondary color", value='#0000ff')
 
-        # Manage added layers
-        if 'added_layers' not in st.session_state:
-            st.session_state.added_layers = []
+    if selected_year is not None and sat is not None and roi is not None:
+        Map.centerObject(roi, zoom=10)
 
-        # Display current layers and allow removal
-        st.write("**Current Layers:**")
-        for layer_id, layer_info in enumerate(st.session_state.added_layers):
-            st.write(f"{layer_id + 1}. {layer_info['name']}")
+        # Clear existing layers if they exist
+        for layer_info in added_layers:
+            Map.remove_layer(layer_info['layer'])
+        added_layers.clear()
 
-        if st.button("Remove Selected Layer"):
-            selected_layers = st.multiselect("Select layers to remove", range(1, len(st.session_state.added_layers) + 1))
-            selected_layers = [int(x) - 1 for x in selected_layers]  # Convert to zero-based index
-            for index in sorted(selected_layers, reverse=True):
-                removed_layer = st.session_state.added_layers.pop(index)
-                Map.remove_layer(removed_layer['layer'])
-
-    if selected_year and sat and roi:
-        Map.centerObject(roi, zoom=12)
+        # Add RGB layer
         rgb_layer = add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
-        st.session_state.added_layers.append({'name': f'{sat} {selected_year} RGB', 'layer': rgb_layer})
+        added_layers.append({'name': f'{sat} {selected_year} RGB', 'layer': rgb_layer})
+
+        # Add GeoDataFrame layer
         Map.add_gdf(gdf, 'polygon')
 
+        # Add index layer if checked
         if check_index:
             index_layer = Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
                                        {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
                                        f'{index_name},{sat} {selected_year}')
-            st.session_state.added_layers.append({'name': f'{index_name},{sat} {selected_year}', 'layer': index_layer})
+            added_layers.append({'name': f'{index_name},{sat} {selected_year}', 'layer': index_layer})
 
-        with row1_col1:
-            Map.to_streamlit(height=600)
-
-    else:
-        with row1_col1:
-            Map.to_streamlit(height=600)
+    with row1_col1:
+        Map.to_streamlit(height=600)
 
 if __name__ == "__main__":
     main()
