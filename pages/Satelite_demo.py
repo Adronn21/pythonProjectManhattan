@@ -20,33 +20,33 @@ Map = geemap.Map()
 datasets = {
     'Sentinel-2': {
         'collection': 'COPERNICUS/S2_SR_HARMONIZED',
-        'bands': ['B4', 'B3', 'B2', 'B8'],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
+        'bands': ['B4', 'B3', 'B2', 'B8'],# bands: 0-Red, 1-Blue, 2-Green, 3-NIR
         'year_range': [2019, 2023]
     },
     'Landsat-7': {
         'collection': 'LANDSAT/LE07/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
         'cloud_mask_value': 1 << 1 | 1 << 3 | 1 << 4 | 1 << 5,
-        'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4' ],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
+        'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4' ],# bands: 0-Red, 1-Blue, 2-Green, 3-NIR
         'year_range': [2000, 2023]
     },
     'Landsat-8': {
         'collection': 'LANDSAT/LC08/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
-        'cloud_mask_value': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4,
-        'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5"],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
+        'cloud_mask_value': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5,
+        'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5"],# bands: 0-Red, 1-Blue, 2-Green, 3-NIR
         'year_range': [2014, 2023]
     },
     'MODIS': {
         'collection': 'MODIS/006/MOD09GA',
         'cloud_mask_band': 'state_1km',
         'cloud_mask_value': 1 << 10 | 1 << 11,
-        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b05'],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
+        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b05'],# bands: 0-Red, 1-Blue, 2-Green, 3-NIR
         'year_range': [2001, 2022]
     }
 }
 
-indexes = ["NDVI", "NDWI","SAVI", "EVI", "GNDVI", "NDRE", "MSAVI2", "ARVI", "PRI", "WBI"]
+indexes = ["NDVI", "NDWI", "SAVI", "EVI", "GNDVI", "NDRE", "MSAVI2", "ARVI", "PRI", "WBI"]
 
 def mask_clouds(image, dataset):
     cloud_mask_band = datasets[dataset]['cloud_mask_band']
@@ -94,6 +94,13 @@ def calcIndex(satellite, index_name, year, region, clip):
         return image.normalizedDifference([datasets[satellite]['bands'][3], datasets[satellite]['bands'][0]]).rename('NDVI')
     elif index_name == "NDWI":
         return image.normalizedDifference([datasets[satellite]['bands'][1], datasets[satellite]['bands'][3]]).rename('NDWI')
+    elif index_name == "SAVI":
+        return image.expression(
+                indexes["SAVI"], {
+                    'NIR': datasets[satellite]['bands'][3],
+                    'RED': datasets[satellite]['bands'][0],
+                    'L': 0.5
+                }).rename('SAVI')
 
 
 
