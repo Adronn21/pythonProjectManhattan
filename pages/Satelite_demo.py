@@ -33,7 +33,7 @@ datasets = {
     'Landsat-8': {
         'collection': 'LANDSAT/LC08/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
-        'cloud_mask_value': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5,
+        'cloud_mask_value': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4,
         'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5"],# bands: 1-Red, 2-Blue, 3- Green, 4-NIR
         'year_range': [2014, 2023]
     },
