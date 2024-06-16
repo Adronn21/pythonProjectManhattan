@@ -170,7 +170,7 @@ with row1_col2:
     gamma = st.text_input("Set gamma", value = 1.4)
 
     check_index = st.toggle("Add Index")
-    index_name = st.selectbox("Select an index", indexes)
+    index_name = st.selectbox("Select an index", indexes.keys())
     main_color = st.color_picker('Main color', value='#00ff00')
     secondary_color = st.color_picker("Secondary color", value='#0000ff')
 
