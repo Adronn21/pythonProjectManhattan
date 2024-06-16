@@ -217,7 +217,7 @@ def main():
                                        {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
                                        f'{index_name},{sat} {selected_year}')
             added_layers.append({'name': f'{index_name},{sat} {selected_year}', 'layer': index_layer})
-
+        st.write(added_layers)
     with row1_col1:
         Map.to_streamlit(height=600)
 
