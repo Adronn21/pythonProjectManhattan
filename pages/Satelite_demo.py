@@ -100,10 +100,10 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
 def calcIndex(satellite, index_name, year, region, clip):
     filtered_images = get_filtered_images(satellite, year, region)
     image = filtered_images.median()
-    red_band = datasets[satellite]['bands'][0]
+    red_band = image.select(datasets[satellite]['bands'][0])
     blue_band = datasets[satellite]['bands'][1]
     green_band = datasets[satellite]['bands'][2]
-    nir_band = datasets[satellite]['bands'][3]
+    nir_band = image.select(datasets[satellite]['bands'][3])
 
     if clip:
         image = image.clip(region)
