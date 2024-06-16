@@ -202,8 +202,7 @@ def main():
         Map.centerObject(roi, zoom=10)
 
         # Clear existing layers if they exist
-        for layer_info in added_layers:
-            Map.remove_layer(layer_info['layer'])
+
         added_layers.clear()
 
         # Add RGB layer
