@@ -9,6 +9,9 @@ import zipfile
 import tempfile
 import os
 
+# Global variables
+Map = None
+
 st.set_page_config(layout="wide")
 st.header("Satelite Imagery")
 row1_col1, row1_col2 = st.columns([4, 1])
@@ -16,10 +19,7 @@ row2_col1, row2_col2 = st.columns([4, 1])
 # Function to run once when page loads
 @st.cache(allow_output_mutation=True)
 def setup():
-    global Map
-
-    if Map is None:
-        Map = geemap.Map()
+    global Map = geemap.Map()
 
     return "Initialization done."
 
