@@ -193,6 +193,7 @@ def main():
             st.markdown("""---""")
             with row1_col3:
                 st.markdown("""
+                
                 """)
                 st.markdown("""---""")
                 check_index_2 = st.toggle("Add Index 2")
