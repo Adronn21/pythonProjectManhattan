@@ -185,16 +185,13 @@ def main():
         clip = st.toggle("Clip image")
 
     with row1_col2:
-        st.markdown("""---""")
         check_index_1 = st.toggle("Add Index 1")
         if check_index_1:
             index_name_1 = st.selectbox("Select 1st index", list(indexes.keys()), index=0)
             main_color_1 = st.color_picker('Main color 1', value='#00ff00')
             mid_color_1 = st.color_picker('Mid color 1', value='#ffff00')
             secondary_color_1 = st.color_picker("Secondary color 1", value='#ff0000')
-            st.markdown("""---""")
             with row1_col3:
-                st.markdown("""---""")
                 check_index_2 = st.toggle("Add Index 2")
                 if check_index_2:
                     filtered_indexes = [key for key in indexes.keys() if indexes[key] != index_name_1]
@@ -202,7 +199,6 @@ def main():
                     main_color_2 = st.color_picker('Main color 2', value='#00ff00')
                     mid_color_2 = st.color_picker('Mid color 2', value='#ffff00')
                     secondary_color_2 = st.color_picker("Secondary color 2", value='#ff0000')
-                    st.markdown("""---""")
 
 
 
