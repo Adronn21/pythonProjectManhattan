@@ -17,8 +17,8 @@ def setup():
 # Main Streamlit app
 def main():
     # Execute setup function
-    if map not in st.session_state:
-        map = geemap.Map()
+    if 'Map' not in st.session_state:
+        Map = geemap.Map()
 
     setup_result = setup()
     row1_col1, row1_col2 = st.columns([4, 1])
@@ -190,19 +190,19 @@ def main():
             secondary_color = st.color_picker("Secondary color", value='#ff0000')
 
     if selected_year is not None and sat is not None and roi is not None:
-        map.centerObject(roi, zoom=10)
+        Map.centerObject(roi, zoom=10)
         # Add RGB layer
-        add_rgb_layer_to_map(map, sat, selected_year, roi, brightness, clip, gamma)
+        add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
         # Add GeoDataFrame layer
-        map.add_gdf(gdf, 'polygon')
+        Map.add_gdf(gdf, 'polygon')
         # Add index layer if checked
         if check_index:
-            map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
+            Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
                                        {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
                                        f'{index_name},{sat} {selected_year}')
 
     with row1_col1:
-        map.to_streamlit(height=600)
+        Map.to_streamlit(height=600)
 
 if __name__ == "__main__":
     main()
