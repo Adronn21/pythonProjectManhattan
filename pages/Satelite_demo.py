@@ -127,7 +127,7 @@ def main():
             'NIR': image.select(nir_band),
             'RED_EDGE': image.select(red_edge_band),
             'L': 0.5
-        })
+        }).rename(index_name)
         return index
 
     roi = None
