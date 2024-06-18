@@ -21,10 +21,6 @@ def main():
     row1_col1, row1_col2 = st.columns([4, 1])
     row2_col1, row2_col2 = st.columns([4, 1])
 
-    # Initialize Map if not already initialized
-    if 'added_layers' not in st.session_state:
-        st.session_state.added_layers = []
-
     Map = geemap.Map()
 
     # Dictionary of datasets
@@ -134,7 +130,6 @@ def main():
         return index
 
     roi = None
-    added_layers = st.session_state.added_layers  # Retrieve added layers from session state
 
     # Upload a zipped shapefile
     uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
@@ -188,29 +183,21 @@ def main():
         if check_index:
             index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
             main_color = st.color_picker('Main color', value='#00ff00')
-            secondary_color = st.color_picker("Secondary color", value='#0000ff')
+            mid_color = st.color_picker('Mid color', value='#00ff00')
+            secondary_color = st.color_picker("Secondary color", value='#ffff00')
 
     if selected_year is not None and sat is not None and roi is not None:
         Map.centerObject(roi, zoom=10)
-
-        # Clear existing layers if they exist
-
-        added_layers.clear()
-
         # Add RGB layer
-        rgb_layer = add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
-        added_layers.append({'name': f'{sat} {selected_year} RGB', 'layer': rgb_layer})
-
+        add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
         # Add GeoDataFrame layer
         Map.add_gdf(gdf, 'polygon')
-
         # Add index layer if checked
         if check_index:
-            index_layer = Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
-                                       {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
+            Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
+                                       {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
                                        f'{index_name},{sat} {selected_year}')
-            added_layers.append({'name': f'{index_name},{sat} {selected_year}', 'layer': index_layer})
-        st.write(added_layers)
+
     with row1_col1:
         Map.to_streamlit(height=600)
 
