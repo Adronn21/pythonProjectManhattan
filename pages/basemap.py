@@ -20,7 +20,6 @@ st.header("Satellite Imagery")
 # Main Streamlit app
 
 # Execute setup function
-setup_result = setup()
 row1_col1, row1_col2 = st.columns([4, 1])
 row2_col1, row2_col2 = st.columns([4, 1])
 
