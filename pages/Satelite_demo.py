@@ -156,8 +156,8 @@ def main():
                 # Create the plot
                 fig, ax = plt.subplots()
                 gdf.plot(ax=ax)
-                plt.xticks(rotation=90, fontsize=6)
-                plt.yticks(fontsize=6)
+                plt.xticks(rotation=90, fontsize=7)
+                plt.yticks(fontsize=7)
 
                 # Save the plot to a BytesIO object
                 buf = BytesIO()
