@@ -195,11 +195,11 @@ def main():
 
         # Clear existing layers if they exist
 
-        added_layers.clear()
+        # added_layers.clear()
 
         # Add RGB layer
         rgb_layer = add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
-        added_layers.append({'name': f'{sat} {selected_year} RGB', 'layer': rgb_layer})
+        added_layers.add({'name': f'{sat} {selected_year} RGB', 'layer': rgb_layer})
 
         # Add GeoDataFrame layer
         Map.add_gdf(gdf, 'polygon')
@@ -209,7 +209,7 @@ def main():
             index_layer = Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
                                        {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
                                        f'{index_name},{sat} {selected_year}')
-            added_layers.append({'name': f'{index_name},{sat} {selected_year}', 'layer': index_layer})
+            added_layers.add({'name': f'{index_name},{sat} {selected_year}', 'layer': index_layer})
         st.write(added_layers)
     with row1_col1:
         Map.to_streamlit(height=600)
