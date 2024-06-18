@@ -206,6 +206,17 @@ def main():
 
                     # Store index layer for reference
                     index_layers.append(index_layer)
+        if selected_year is not None and sat is not None and roi is not None:
+            Map.centerObject(roi, zoom=10)
+            # Add RGB layer
+            add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
+            # Add GeoDataFrame layer
+            Map.add_gdf(gdf, 'polygon')
+            # Add index layer if checked
+            if check_index:
+                Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
+                             {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
+                             f'{index_name},{sat} {selected_year}')
 
     with row1_col1:
         Map.to_streamlit(height=600)
