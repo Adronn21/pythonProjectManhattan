@@ -211,10 +211,10 @@ def main():
             Map.addLayer(calc_index(sat, index_name_1, selected_year, roi, clip),
                                        {'min': -1, 'max': 1, 'palette': [secondary_color_1, mid_color_1, main_color_1]},
                                        f'{index_name_1},{sat} {selected_year}')
-        if check_index_2:
-            Map.addLayer(calc_index(sat, index_name_2, selected_year, roi, clip),
-                                       {'min': -1, 'max': 1, 'palette': [secondary_color_2, mid_color_2, main_color_2]},
-                                       f'{index_name_2},{sat} {selected_year}')
+            if check_index_2:
+                Map.addLayer(calc_index(sat, index_name_2, selected_year, roi, clip),
+                                           {'min': -1, 'max': 1, 'palette': [secondary_color_2, mid_color_2, main_color_2]},
+                                           f'{index_name_2},{sat} {selected_year}')
     with row1_col1:
         Map.to_streamlit(height=600)
 
