@@ -201,7 +201,7 @@ def main():
         # Add RGB layer
         add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
         # Add GeoDataFrame layer
-        Map.add_gdf(gdf, 'polygon')
+
         # Add index layer if checked
         if check_index_1:
             Map.addLayer(calc_index(sat, index_name_1, selected_year, roi, clip),
@@ -211,6 +211,8 @@ def main():
                 Map.addLayer(calc_index(sat, index_name_2, selected_year, roi, clip),
                                            {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
                                            f'{index_name_2},{sat} {selected_year}')
+        Map.add_gdf(gdf, 'polygon')
+
     with row1_col1:
         Map.to_streamlit(height=600)
 
