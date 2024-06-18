@@ -196,12 +196,12 @@ def main():
     with row0_col4:
         gamma = st.text_input("Set gamma", value='1.4')
     with row0_col5:
-        st.markdown("""""")
-        st.markdown("""""")
+
         clip = st.toggle("Clip image")
+        check_index_1 = st.toggle("Add Index")
 
     with row1_col2:
-        check_index_1 = st.toggle("Add Index")
+
         if check_index_1:
             index_name_1 = st.selectbox("Select index", list(indexes.keys()), index=0)
             main_color = st.color_picker('Main color', value='#00ff00')
