@@ -23,7 +23,7 @@ def main():
 
     # Initialize Map if not already initialized
     if 'added_layers' not in st.session_state:
-        st.session_state.added_layers = {}
+        st.session_state.added_layers = []
 
     Map = geemap.Map()
 
@@ -194,25 +194,36 @@ def main():
         Map.centerObject(roi, zoom=10)
 
         # Clear existing layers if they exist
-
-        # added_layers.clear()
+        added_layers.clear()
 
         # Add RGB layer
         rgb_layer = add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
-        added_layers.add({'name': f'{sat} {selected_year} RGB', 'layer': rgb_layer})
+        added_layers.append({'name': f'{sat} {selected_year} RGB', 'layer': rgb_layer})
 
         # Add GeoDataFrame layer
         Map.add_gdf(gdf, 'polygon')
 
+        # Set to keep track of added layer names
+        added_layer_names = set()
+
         # Add index layer if checked
         if check_index:
-            index_layer = Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
-                                       {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
-                                       f'{index_name},{sat} {selected_year}')
-            added_layers.add({'name': f'{index_name},{sat} {selected_year}', 'layer': index_layer})
+            index_name = calc_index(sat, index_name, selected_year, roi, clip)
+            index_layer_name = f'{index_name},{sat} {selected_year}'
+
+            # Ensure layer names are unique
+            if index_layer_name not in added_layer_names:
+                index_layer = Map.addLayer(index_name,
+                                           {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
+                                           index_layer_name)
+                added_layers.append({'name': index_layer_name, 'layer': index_layer})
+                added_layer_names.add(index_layer_name)
+
         st.write(added_layers)
+
     with row1_col1:
         Map.to_streamlit(height=600)
+
 
 if __name__ == "__main__":
     main()
