@@ -122,19 +122,13 @@ def main():
         if clip:
             image = image.clip(region)
 
-        if index_name == "NDVI":
-            index = image.normalizedDifference([nir_band, red_band]).rename('NDVI')
-        elif index_name == "NDWI":
-            index = image.normalizedDifference([blue_band, nir_band]).rename('NDWI')
-        elif index_name == "SAVI":
-            index = image.expression(indexes["SAVI"], {
-                'NIR': image.select(nir_band),
-                'RED': image.select(red_band),
-                'L': 0.5
-            }).rename('SAVI')
-        else:
-            raise ValueError(f"Index {index_name} not supported.")
-
+        index = image.expression(indexes[index_name], {
+            'RED': image.select(red_band),
+            'BLUE': image.select(blue_band),
+            'GREEN': image.select(green_band),
+            'NIR': image.select(nir_band),
+            'L': 0.5
+        })
         return index
 
     roi = None
