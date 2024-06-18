@@ -190,17 +190,11 @@ def main():
             index_name_1 = st.selectbox("Select 1st index", list(indexes.keys()), index=0)
             check_index_2 = st.toggle("Add Index 2")
             if check_index_2:
-                filtered_indexes = [key for key in indexes.keys() if indexes[key] != index_name_1]
+                filtered_indexes = [key for key in indexes.keys() if key != index_name_1]
                 index_name_2 = st.selectbox("Select 2nd index", list(filtered_indexes), index=1)
             main_color = st.color_picker('Main color 1', value='#00ff00')
             mid_color = st.color_picker('Mid color 1', value='#ffff00')
             secondary_color = st.color_picker("Secondary color 1", value='#ff0000')
-
-
-
-
-
-
 
     if selected_year is not None and sat is not None and roi is not None:
         Map.centerObject(roi, zoom=10)
