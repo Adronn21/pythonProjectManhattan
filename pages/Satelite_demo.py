@@ -38,21 +38,21 @@ def main():
             'collection': 'LANDSAT/LE07/C02/T1_L2',
             'cloud_mask_band': 'QA_PIXEL',
             'cloud_mask_value': 1 << 1 | 1 << 3 | 1 << 4 | 1 << 5,
-            'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B4"],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+            'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B3"],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
             'year_range': [2000, 2023]
         },
         'Landsat-8': {
             'collection': 'LANDSAT/LC08/C02/T1_L2',
             'cloud_mask_band': 'QA_PIXEL',
             'cloud_mask_value': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5,
-            'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5", "SR_B5"],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+            'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5", "SR_B4"],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
             'year_range': [2014, 2023]
         },
         'MODIS': {
             'collection': 'MODIS/006/MOD09GA',
             'cloud_mask_band': 'state_1km',
             'cloud_mask_value': 1 << 10 | 1 << 11,
-            'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b05', 'sur_refl_b02'],  # 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+            'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b02', 'sur_refl_b01'],  # 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
             'year_range': [2001, 2022]
         }
     }
