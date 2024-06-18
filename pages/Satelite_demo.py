@@ -181,6 +181,7 @@ def main():
         gamma = st.text_input("Set gamma", value='1.4')
     with row0_col5:
         st.markdown("""""")
+        st.markdown("""""")
         clip = st.toggle("Clip image")
 
     with row1_col2:
