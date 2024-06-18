@@ -19,7 +19,7 @@ def main():
     # Execute setup function
     setup_result = setup()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
-    row1_col1, row1_col2, row1_col3 = st.columns([5, 1, 1])
+    row1_col1, row1_col2 = st.columns([5, 1])
 
 
     Map = geemap.Map()
@@ -188,17 +188,14 @@ def main():
         check_index_1 = st.toggle("Add Index 1")
         if check_index_1:
             index_name_1 = st.selectbox("Select 1st index", list(indexes.keys()), index=0)
-            main_color_1 = st.color_picker('Main color 1', value='#00ff00')
-            mid_color_1 = st.color_picker('Mid color 1', value='#ffff00')
-            secondary_color_1 = st.color_picker("Secondary color 1", value='#ff0000')
-            with row1_col3:
-                check_index_2 = st.toggle("Add Index 2")
-                if check_index_2:
-                    filtered_indexes = [key for key in indexes.keys() if indexes[key] != index_name_1]
-                    index_name_2 = st.selectbox("Select 2nd index", list(filtered_indexes), index=1)
-                    main_color_2 = st.color_picker('Main color 2', value='#00ff00')
-                    mid_color_2 = st.color_picker('Mid color 2', value='#ffff00')
-                    secondary_color_2 = st.color_picker("Secondary color 2", value='#ff0000')
+            main_color = st.color_picker('Main color 1', value='#00ff00')
+            mid_color = st.color_picker('Mid color 1', value='#ffff00')
+            secondary_color = st.color_picker("Secondary color 1", value='#ff0000')
+            check_index_2 = st.toggle("Add Index 2")
+            if check_index_2:
+                filtered_indexes = [key for key in indexes.keys() if indexes[key] != index_name_1]
+                index_name_2 = st.selectbox("Select 2nd index", list(filtered_indexes), index=1)
+
 
 
 
@@ -213,11 +210,11 @@ def main():
         # Add index layer if checked
         if check_index_1:
             Map.addLayer(calc_index(sat, index_name_1, selected_year, roi, clip),
-                                       {'min': -1, 'max': 1, 'palette': [secondary_color_1, mid_color_1, main_color_1]},
+                                       {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
                                        f'{index_name_1},{sat} {selected_year}')
             if check_index_2:
                 Map.addLayer(calc_index(sat, index_name_2, selected_year, roi, clip),
-                                           {'min': -1, 'max': 1, 'palette': [secondary_color_2, mid_color_2, main_color_2]},
+                                           {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
                                            f'{index_name_2},{sat} {selected_year}')
     with row1_col1:
         Map.to_streamlit(height=600)
