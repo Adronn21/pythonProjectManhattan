@@ -65,7 +65,7 @@ def main():
         "NDWI": "(GREEN - NIR) / (GREEN + NIR)",
         "GNDVI": "(NIR - GREEN) / (NIR + GREEN)",
         "NDRE": "(NIR - RED_EDGE) / (NIR + RED_EDGE)",
-        "MSAVI2": "((2 * NIR + 1) - sqrt(pow(2 * NIR + 1) - 8 * (NIR - RED))) / 2",
+        "MSAVI2": "(2 * NIR + 1 - sqrt(pow((2 * NIR + 1), 2) - 8 * (NIR - RED)) ) / 2",
         "ARVI": "(NIR - (2 * RED - BLUE)) / (NIR + (2 * RED - BLUE))",
         "PRI": "(RED - BLUE) / (RED + BLUE)",
         "WBI": "NIR / GREEN"
