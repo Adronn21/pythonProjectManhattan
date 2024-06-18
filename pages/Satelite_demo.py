@@ -192,8 +192,8 @@ def main():
             secondary_color_1 = st.color_picker("Secondary color 1", value='#ff0000')
             st.markdown("""---""")
             with row1_col3:
-                st.markdown("""""")
-                st.markdown("""""")
+                st.markdown("""
+                """)
                 st.markdown("""---""")
                 check_index_2 = st.toggle("Add Index 2")
                 if check_index_2:
