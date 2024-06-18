@@ -183,12 +183,22 @@ def main():
         pass
     with row1_col2:
         clip = st.toggle("Clip image")
-        check_index = st.toggle("Add Index")
-        if check_index:
-            index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
-            main_color = st.color_picker('Main color', value='#00ff00')
-            mid_color = st.color_picker('Mid color', value='#ffff00')
-            secondary_color = st.color_picker("Secondary color", value='#ff0000')
+        check_index_1 = st.toggle("Add Index 1")
+        if check_index_1:
+            index_name_1 = st.selectbox("Select an index", list(indexes.keys()), index=0)
+            main_color_1 = st.color_picker('Main color', value='#00ff00')
+            mid_color_1 = st.color_picker('Mid color', value='#ffff00')
+            secondary_color_1 = st.color_picker("Secondary color", value='#ff0000')
+            check_index_2 = st.toggle("Add Index 2")
+            if check_index_2:
+                filtered_indexes = [key for key in indexes.keys() if indexes[key] != index_name_1]
+                index_name_2 = st.selectbox("Select an index", list(filtered_indexes), index=0)
+                main_color_2 = st.color_picker('Main color', value='#00ff00')
+                mid_color_2 = st.color_picker('Mid color', value='#ffff00')
+                secondary_color_2 = st.color_picker("Secondary color", value='#ff0000')
+
+
+
 
     if selected_year is not None and sat is not None and roi is not None:
         Map.centerObject(roi, zoom=10)
@@ -197,11 +207,14 @@ def main():
         # Add GeoDataFrame layer
         Map.add_gdf(gdf, 'polygon')
         # Add index layer if checked
-        if check_index:
-            Map.addLayer(calc_index(sat, index_name, selected_year, roi, clip),
-                                       {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
-                                       f'{index_name},{sat} {selected_year}')
-
+        if check_index_1:
+            Map.addLayer(calc_index(sat, index_name_1, selected_year, roi, clip),
+                                       {'min': -1, 'max': 1, 'palette': [secondary_color_1, mid_color_1, main_color_1]},
+                                       f'{index_name_1},{sat} {selected_year}')
+        if check_index_2:
+            Map.addLayer(calc_index(sat, index_name_2, selected_year, roi, clip),
+                                       {'min': -1, 'max': 1, 'palette': [secondary_color_2, mid_color_2, main_color_2]},
+                                       f'{index_name_2},{sat} {selected_year}')
     with row1_col1:
         Map.to_streamlit(height=600)
 
