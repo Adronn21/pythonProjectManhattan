@@ -18,8 +18,9 @@ def setup():
 def main():
     # Execute setup function
     setup_result = setup()
+    row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([4, 1])
-    row2_col1, row2_col2 = st.columns([4, 1])
+
 
     Map = geemap.Map()
 
@@ -169,16 +170,18 @@ def main():
             if not gdf.empty:
                 roi = geemap.geopandas_to_ee(gdf)
 
-    with row1_col2:
+    with row0_col1:
         sat = st.selectbox("Select a satellite", list(datasets.keys()), index=0)
+    with row0_col2:
         years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1] + 1))
         selected_year = st.selectbox("Select a year", years, index=len(years) - 1)
-
-        clip = st.checkbox("Clip image")
-
+    with row0_col3:
         brightness = st.text_input("Set brightness", value='3')
+    with row0_col4:
         gamma = st.text_input("Set gamma", value='1.4')
-
+    with row0_col5:
+        clip = st.checkbox("Clip image")
+    with row1_col2:
         check_index = st.checkbox("Add Index")
         if check_index:
             index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
