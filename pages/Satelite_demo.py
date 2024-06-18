@@ -19,7 +19,7 @@ def main():
     # Execute setup function
     setup_result = setup()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
-    row1_col1, row1_col2, row1_col3 = st.columns([5, 1, 1])
+    row1_col1, row1_col2, row1_col3 = st.columns([5, 1, 0])
 
 
     Map = geemap.Map()
@@ -186,13 +186,12 @@ def main():
 
     with row1_col2:
         check_index_1 = st.toggle("Add Index 1")
-        row1_col3 = [0]
         if check_index_1:
             index_name_1 = st.selectbox("Select 1st index", list(indexes.keys()), index=0)
             main_color_1 = st.color_picker('Main color 1', value='#00ff00')
             mid_color_1 = st.color_picker('Mid color 1', value='#ffff00')
             secondary_color_1 = st.color_picker("Secondary color 1", value='#ff0000')
-            row1_col3 = [1]
+            row1_col1, row1_col2, row1_col3 = st.columns([5, 1, 1])
             with row1_col3:
                 check_index_2 = st.toggle("Add Index 2")
                 if check_index_2:
