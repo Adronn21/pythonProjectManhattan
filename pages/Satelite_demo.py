@@ -129,7 +129,19 @@ def main():
             'RED_EDGE': image.select(red_edge_band),
             'L': 0.5
         }).rename(index_name)
-        return index
+
+        stats = index_image.reduceRegion(
+            reducer=ee.Reducer.mean().combine(
+                reducer2=ee.Reducer.minMax(), sharedInputs=True
+            ).combine(
+                reducer2=ee.Reducer.stdDev(), sharedInputs=True
+            ),
+            geometry=region,
+            scale=30,
+            bestEffort=True
+        ).getInfo()
+
+        return index_image, stats
 
     roi = None
 
@@ -208,17 +220,55 @@ def main():
 
         # Add index layer if checked
         if check_index_1:
-            Map.addLayer(calc_index(sat, index_name_1, selected_year, roi, clip),
+            index_image_1, stats_1 = calc_index(sat, index_name_1, selected_year, roi, clip)
+            Map.addLayer(index_image_1,
                                        {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
                                        f'{index_name_1},{sat} {selected_year}')
+            with row2_col2:
+                st.subheader(f"{index_name_1} Statistics")
+                st.write("Mean:", stats_1[f"{index_name_1}_mean"])
+                st.write("Min:", stats_1[f"{index_name_1}_min"])
+                st.write("Max:", stats_1[f"{index_name_1}_max"])
+                st.write("Std Dev:", stats_1[f"{index_name_1}_stdDev"])
+
+                # Plot a bar chart of index statistics
+                fig, ax = plt.subplots()
+                labels = ['Mean', 'Min', 'Max', 'Std Dev']
+                values = [stats_1[f"{index_name_1}_mean"], stats_1[f"{index_name_1}_min"],
+                          stats_1[f"{index_name_1}_max"], stats_1[f"{index_name_1}_stdDev"]]
+                ax.bar(labels, values, color=[main_color, secondary_color, 'blue', 'green'])
+                ax.set_title(f'{index_name_1} Statistics')
+                ax.set_ylabel('Value')
+                ax.set_xlabel('Statistics')
+                st.pyplot(fig)
+
             if check_index_2:
-                Map.addLayer(calc_index(sat, index_name_2, selected_year, roi, clip),
-                                           {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
-                                           f'{index_name_2},{sat} {selected_year}')
+                index_image_2, stats_2 = calc_index(sat, index_name_2, selected_year, roi, clip)
+                Map.addLayer(index_image_2,
+                             {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
+                             f'{index_name_2},{sat} {selected_year}')
+                with row2_col3:
+                    st.subheader(f"{index_name_2} Statistics")
+                    st.write("Mean:", stats_2[f"{index_name_2}_mean"])
+                    st.write("Min:", stats_2[f"{index_name_2}_min"])
+                    st.write("Max:", stats_2[f"{index_name_2}_max"])
+                    st.write("Std Dev:", stats_2[f"{index_name_2}_stdDev"])
+
+                    # Plot a bar chart of index statistics
+                    fig, ax = plt.subplots()
+                    labels = ['Mean', 'Min', 'Max', 'Std Dev']
+                    values = [stats_2[f"{index_name_2}_mean"], stats_2[f"{index_name_2}_min"],
+                              stats_2[f"{index_name_2}_max"], stats_2[f"{index_name_2}_stdDev"]]
+                    ax.bar(labels, values, color=[main_color, secondary_color, 'blue', 'green'])
+                    ax.set_title(f'{index_name_2} Statistics')
+                    ax.set_ylabel('Value')
+                    ax.set_xlabel('Statistics')
+                    st.pyplot(fig)
         Map.add_gdf(gdf, 'polygon')
 
     with row1_col1:
         Map.to_streamlit(height=600)
+
 
 if __name__ == "__main__":
     main()
