@@ -17,14 +17,11 @@ def setup():
 # Main Streamlit app
 def main():
     # Execute setup function
-    if 'Map' not in st.session_state:
-        Map = geemap.Map()
-
     setup_result = setup()
     row1_col1, row1_col2 = st.columns([4, 1])
     row2_col1, row2_col2 = st.columns([4, 1])
 
-
+    Map = geemap.Map()
 
     # Dictionary of datasets
     datasets = {
