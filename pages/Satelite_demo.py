@@ -180,9 +180,10 @@ def main():
     with row0_col4:
         gamma = st.text_input("Set gamma", value='1.4')
     with row0_col5:
-        pass
-    with row1_col2:
+        st.markdown("""""")
         clip = st.toggle("Clip image")
+
+    with row1_col2:
         st.markdown("""---""")
         check_index_1 = st.toggle("Add Index 1")
         if check_index_1:
@@ -192,9 +193,6 @@ def main():
             secondary_color_1 = st.color_picker("Secondary color 1", value='#ff0000')
             st.markdown("""---""")
             with row1_col3:
-                st.markdown("""
-                
-                """)
                 st.markdown("""---""")
                 check_index_2 = st.toggle("Add Index 2")
                 if check_index_2:
