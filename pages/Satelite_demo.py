@@ -225,12 +225,6 @@ def main():
                                        {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
                                        f'{index_name_1},{sat} {selected_year}')
             with row2_col2:
-                st.subheader(f"{index_name_1} Statistics")
-                st.write("Mean:", stats_1[f"{index_name_1}_mean"])
-                st.write("Min:", stats_1[f"{index_name_1}_min"])
-                st.write("Max:", stats_1[f"{index_name_1}_max"])
-                st.write("Std Dev:", stats_1[f"{index_name_1}_stdDev"])
-
                 # Plot a bar chart of index statistics
                 fig, ax = plt.subplots()
                 labels = ['Mean', 'Min', 'Max', 'Std Dev']
@@ -242,18 +236,18 @@ def main():
                 ax.set_xlabel('Statistics')
                 st.pyplot(fig)
 
+                st.subheader(f"{index_name_1} Statistics")
+                st.write("Mean:", stats_1[f"{index_name_1}_mean"])
+                st.write("Min:", stats_1[f"{index_name_1}_min"])
+                st.write("Max:", stats_1[f"{index_name_1}_max"])
+                st.write("Std Dev:", stats_1[f"{index_name_1}_stdDev"])
+
             if check_index_2:
                 index_image_2, stats_2 = calc_index(sat, index_name_2, selected_year, roi, clip)
                 Map.addLayer(index_image_2,
                              {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
                              f'{index_name_2},{sat} {selected_year}')
                 with row2_col3:
-                    st.subheader(f"{index_name_2} Statistics")
-                    st.write("Mean:", stats_2[f"{index_name_2}_mean"])
-                    st.write("Min:", stats_2[f"{index_name_2}_min"])
-                    st.write("Max:", stats_2[f"{index_name_2}_max"])
-                    st.write("Std Dev:", stats_2[f"{index_name_2}_stdDev"])
-
                     # Plot a bar chart of index statistics
                     fig, ax = plt.subplots()
                     labels = ['Mean', 'Min', 'Max', 'Std Dev']
@@ -264,6 +258,13 @@ def main():
                     ax.set_ylabel('Value')
                     ax.set_xlabel('Statistics')
                     st.pyplot(fig)
+
+                    st.subheader(f"{index_name_2} Statistics")
+                    st.write("Mean:", stats_2[f"{index_name_2}_mean"])
+                    st.write("Min:", stats_2[f"{index_name_2}_min"])
+                    st.write("Max:", stats_2[f"{index_name_2}_max"])
+                    st.write("Std Dev:", stats_2[f"{index_name_2}_stdDev"])
+
         Map.add_gdf(gdf, 'polygon')
 
     with row1_col1:
