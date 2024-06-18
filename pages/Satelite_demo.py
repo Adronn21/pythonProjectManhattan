@@ -130,7 +130,7 @@ def main():
             'L': 0.5
         }).rename(index_name)
 
-        stats = index_image.reduceRegion(
+        stats = index.reduceRegion(
             reducer=ee.Reducer.mean().combine(
                 reducer2=ee.Reducer.minMax(), sharedInputs=True
             ).combine(
@@ -141,7 +141,7 @@ def main():
             bestEffort=True
         ).getInfo()
 
-        return index_image, stats
+        return index, stats
 
     roi = None
 
