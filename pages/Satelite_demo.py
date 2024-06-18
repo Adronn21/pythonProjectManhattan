@@ -19,7 +19,7 @@ def main():
     # Execute setup function
     setup_result = setup()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
-    row1_col1, row1_col2 = st.columns([5, 1])
+    row1_col1, row1_col2, row1_col3 = st.columns([5, 1, 1])
 
 
     Map = geemap.Map()
@@ -191,13 +191,14 @@ def main():
             mid_color_1 = st.color_picker('Mid color 1', value='#ffff00')
             secondary_color_1 = st.color_picker("Secondary color 1", value='#ff0000')
             st.markdown("""---""")
-            check_index_2 = st.toggle("Add Index 2")
-            if check_index_2:
-                filtered_indexes = [key for key in indexes.keys() if indexes[key] != index_name_1]
-                index_name_2 = st.selectbox("Select 2nd index", list(filtered_indexes), index=1)
-                main_color_2 = st.color_picker('Main color 2', value='#00ff00')
-                mid_color_2 = st.color_picker('Mid color 2', value='#ffff00')
-                secondary_color_2 = st.color_picker("Secondary color 2", value='#ff0000')
+            with row1_col3:
+                check_index_2 = st.toggle("Add Index 2")
+                if check_index_2:
+                    filtered_indexes = [key for key in indexes.keys() if indexes[key] != index_name_1]
+                    index_name_2 = st.selectbox("Select 2nd index", list(filtered_indexes), index=1)
+                    main_color_2 = st.color_picker('Main color 2', value='#00ff00')
+                    mid_color_2 = st.color_picker('Mid color 2', value='#ffff00')
+                    secondary_color_2 = st.color_picker("Secondary color 2", value='#ff0000')
 
 
 
