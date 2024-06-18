@@ -9,7 +9,7 @@ import tempfile
 import os
 
 # Initialize Earth Engine
-ee.Initialize()
+ee.Initialize(project='ee-adilbaygabulov')
 
 # Function to run once when page loads
 def setup():
