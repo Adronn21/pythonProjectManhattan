@@ -192,7 +192,7 @@ def main():
             check_index_2 = st.toggle("Add Index 2")
             if check_index_2:
                 filtered_indexes = [key for key in indexes.keys() if indexes[key] != index_name_1]
-                index_name_2 = st.selectbox("Select an index", list(filtered_indexes), index=0)
+                index_name_2 = st.selectbox("Select an index", list(filtered_indexes), index=1)
                 main_color_2 = st.color_picker('Main color', value='#00ff00')
                 mid_color_2 = st.color_picker('Mid color', value='#ffff00')
                 secondary_color_2 = st.color_picker("Secondary color", value='#ff0000')
