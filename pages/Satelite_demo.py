@@ -23,7 +23,7 @@ def main():
 
     # Initialize Map if not already initialized
     if 'added_layers' not in st.session_state:
-        st.session_state.added_layers = []
+        st.session_state.added_layers = {}
 
     Map = geemap.Map()
 
@@ -195,7 +195,7 @@ def main():
 
         # Clear existing layers if they exist
 
-        # added_layers.clear()
+        added_layers.clear()
 
         # Add RGB layer
         rgb_layer = add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
