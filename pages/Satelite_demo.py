@@ -180,9 +180,9 @@ def main():
     with row0_col4:
         gamma = st.text_input("Set gamma", value='1.4')
     with row0_col5:
-        clip = st.checkbox("Clip image")
+        clip = st.toggle("Clip image")
     with row1_col2:
-        check_index = st.checkbox("Add Index")
+        check_index = st.toggle("Add Index")
         if check_index:
             index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
             main_color = st.color_picker('Main color', value='#00ff00')
