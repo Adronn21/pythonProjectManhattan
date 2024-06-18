@@ -8,9 +8,6 @@ import zipfile
 import tempfile
 import os
 
-# Initialize Earth Engine
-ee.Initialize()
-
 # Function to run once when page loads
 def setup():
     st.set_page_config(layout="wide")
