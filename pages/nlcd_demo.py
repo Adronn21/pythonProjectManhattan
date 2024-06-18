@@ -234,48 +234,48 @@ if selected_year and sat and roi:
         # Display map without index layer
         with row1_col1:
             Map.to_streamlit(height=600)
-#ST.AREA_CHART
-with row1_col2:
-    sat = st.selectbox("Select a satellite", list(datasets.keys()))
-    years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
-    selected_year = st.selectbox("Select a year", years)
-
-    clip = st.checkbox("Clip image")
-
-    brightness = st.text_input("Set brightness", value=3)
-    gamma = st.text_input("Set gamma", value=1.4)
-
-    check_index = st.checkbox("Add Index")
-    index_name = st.selectbox("Select an index", indexes.keys())
-    main_color = st.color_picker('Main color', value='#00ff00')
-    secondary_color = st.color_picker("Secondary color", value='#0000ff')
-
-if selected_year and sat and roi:
-    Map.centerObject(roi, zoom=12)
-    add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
-    Map.add_gdf(gdf, 'polygon')
-    if check_index:
-        index_image, stats = calcIndex(sat, index_name, selected_year, roi, clip)
-        Map.addLayer(index_image,
-                     {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
-                     f'{index_name},{sat} {selected_year}')
-        with row1_col1:
-            Map.to_streamlit(height=600)
-
-        with row2_col1:
-            st.write(f"**{index_name} Statistics**")
-            st.write(stats)
-
-            # Create DataFrame for area chart
-            df = pd.DataFrame({
-                'Statistic': ['mean', 'min', 'max', 'stdDev'],
-                'Value': [stats[f'{index_name}_mean'], stats[f'{index_name}_min'], stats[f'{index_name}_max'],
-                          stats[f'{index_name}_stdDev']]
-            })
-            st.area_chart(df.set_index('Statistic'))
-    else:
-        with row1_col1:
-            Map.to_streamlit(height=600)
-else:
-    with row1_col1:
-        Map.to_streamlit(height=600)
+# #ST.AREA_CHART
+# with row1_col2:
+#     sat = st.selectbox("Select a satellite", list(datasets.keys()))
+#     years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1]))
+#     selected_year = st.selectbox("Select a year", years)
+#
+#     clip = st.checkbox("Clip image")
+#
+#     brightness = st.text_input("Set brightness", value=3)
+#     gamma = st.text_input("Set gamma", value=1.4)
+#
+#     check_index = st.checkbox("Add Index")
+#     index_name = st.selectbox("Select an index", indexes.keys())
+#     main_color = st.color_picker('Main color', value='#00ff00')
+#     secondary_color = st.color_picker("Secondary color", value='#0000ff')
+#
+# if selected_year and sat and roi:
+#     Map.centerObject(roi, zoom=12)
+#     add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
+#     Map.add_gdf(gdf, 'polygon')
+#     if check_index:
+#         index_image, stats = calcIndex(sat, index_name, selected_year, roi, clip)
+#         Map.addLayer(index_image,
+#                      {'min': -1, 'max': 1, 'palette': [secondary_color, 'white', main_color]},
+#                      f'{index_name},{sat} {selected_year}')
+#         with row1_col1:
+#             Map.to_streamlit(height=600)
+#
+#         with row2_col1:
+#             st.write(f"**{index_name} Statistics**")
+#             st.write(stats)
+#
+#             # Create DataFrame for area chart
+#             df = pd.DataFrame({
+#                 'Statistic': ['mean', 'min', 'max', 'stdDev'],
+#                 'Value': [stats[f'{index_name}_mean'], stats[f'{index_name}_min'], stats[f'{index_name}_max'],
+#                           stats[f'{index_name}_stdDev']]
+#             })
+#             st.area_chart(df.set_index('Statistic'))
+#     else:
+#         with row1_col1:
+#             Map.to_streamlit(height=600)
+# else:
+#     with row1_col1:
+#         Map.to_streamlit(height=600)
