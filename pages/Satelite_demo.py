@@ -13,6 +13,7 @@ ee.Initialize()
 
 # Function to run once when page loads
 def setup():
+    ee.Initialize(project='ee-adilbaygabulov')
     st.set_page_config(layout="wide")
     st.header("Satellite Imagery")
     return "Initialization done."
