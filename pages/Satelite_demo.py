@@ -20,7 +20,7 @@ def main():
     setup_result = setup()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
-    row2_col1, row1_col2, row1_col3 = st.columns([1, 1, 1])
+    row2_col1, row2_col2, row2_col3 = st.columns([1, 1, 1])
 
 
     Map = geemap.Map()
