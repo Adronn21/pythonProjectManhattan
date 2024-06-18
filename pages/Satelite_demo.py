@@ -183,8 +183,8 @@ def main():
         if check_index:
             index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
             main_color = st.color_picker('Main color', value='#00ff00')
-            mid_color = st.color_picker('Mid color', value='#00ff00')
-            secondary_color = st.color_picker("Secondary color", value='#ffff00')
+            mid_color = st.color_picker('Mid color', value='#ffff00')
+            secondary_color = st.color_picker("Secondary color", value='#ff0000')
 
     if selected_year is not None and sat is not None and roi is not None:
         Map.centerObject(roi, zoom=10)
