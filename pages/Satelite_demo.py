@@ -180,8 +180,9 @@ def main():
     with row0_col4:
         gamma = st.text_input("Set gamma", value='1.4')
     with row0_col5:
-        clip = st.toggle("Clip image")
+        pass
     with row1_col2:
+        clip = st.toggle("Clip image")
         check_index = st.toggle("Add Index")
         if check_index:
             index_name = st.selectbox("Select an index", list(indexes.keys()), index=0)
