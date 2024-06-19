@@ -7,7 +7,7 @@ from io import BytesIO
 import zipfile
 import tempfile
 import os
-
+from app import Navbar
 
 
 
@@ -18,7 +18,7 @@ st.header("Satellite Imagery")
 
 
 # Main Streamlit app
-
+Navbar()
 # Execute setup function
 row1_col1, row1_col2 = st.columns([4, 1])
 row2_col1, row2_col2 = st.columns([4, 1])
