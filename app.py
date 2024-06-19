@@ -17,7 +17,7 @@ def setup():
 def Navbar():
     with st.sidebar:
         st.page_link('app.py', label='Satellite imagery', icon='🛰️')
-        st.page_link('pages/graph.py', label='Competition Checker', icon='📈')
+        st.page_link('pages/graph.py', label='Graph', icon='📈')
 
 # Main Streamlit app
 def main():
