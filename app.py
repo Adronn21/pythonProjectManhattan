@@ -18,8 +18,8 @@ def setup():
 def main():
     # builds the sidebar menu
     with st.sidebar:
-        st.page_link('streamlit_app.py', label='Individual Checker', icon='🔥')
-        st.page_link('pages/basemap.py', label='Competition Checker', icon='🛡️')
+        st.page_link('streamlit_app.py', label='Individual Checker')
+        st.page_link('pages/basemap.py', label='Competition Checker')
 
     st.title(f'🔥 Individual Checker')
     # Execute setup function
