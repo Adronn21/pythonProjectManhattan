@@ -240,8 +240,8 @@ def main():
                 st.pyplot(fig)
                 with row2_col3:
                     st.subheader(f"{index_name} Statistics")
-                    st.write("Mean:", stats[f"{index_name}_mean"])
                     st.write("Min:", stats[f"{index_name}_min"])
+                    st.write("Mean:", stats[f"{index_name}_mean"])
                     st.write("Max:", stats[f"{index_name}_max"])
                     st.write("Std Dev:", stats[f"{index_name}_stdDev"])
 
