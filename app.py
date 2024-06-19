@@ -7,11 +7,10 @@ from io import BytesIO
 import zipfile
 import tempfile
 import os
-st.set_page_config(page_title="Satellite imagery")
+
 # Function to run once when page loads
 def setup():
-
-    st.set_page_config(layout="wide")
+    st.set_page_config(layout="wide", page_title="Satellite imagery")
     st.header("Satellite Imagery")
     return "Initialization done."
 
