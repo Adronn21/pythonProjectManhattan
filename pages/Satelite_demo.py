@@ -154,6 +154,7 @@ def main():
     roi = None
     long = st.sidebar.text_input('long')
     lat = st.sidebar.text_input('lat')
+
     if long is not None and lat is not None:
         region = ee.Geometry.Point([long, lat])
     # Upload a zipped shapefile
