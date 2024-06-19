@@ -152,11 +152,12 @@ def main():
         return index, stats
 
     roi = None
+    coords = None
     long = st.sidebar.number_input('long')
     lat = st.sidebar.number_input('lat')
 
-    if long is not None and lat is not None:
-        roi = ee.Geometry.Point([long, lat])
+    if long !=0 and lat !=0:
+        coords = ee.Geometry.Point([long, lat])
     # Upload a zipped shapefile
     uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
@@ -219,7 +220,9 @@ def main():
             main_color = st.color_picker('Main color', value='#00ff00')
             mid_color = st.color_picker('Mid color', value='#ffff00')
             secondary_color = st.color_picker("Secondary color", value='#ff0000')
-
+    if coords is not None and roi is None:
+        Map.centerObject(coords, zoom=10)
+        add_rgb_layer_to_map(Map, sat, selected_year, coords, brightness, None, gamma)
     if selected_year is not None and sat is not None and roi is not None:
         Map.centerObject(roi, zoom=10)
         # Add RGB layer
