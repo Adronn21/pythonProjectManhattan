@@ -152,8 +152,8 @@ def main():
         return index, stats
 
     roi = None
-    long = st.sidebar.text_input('long')
-    lat = st.sidebar.text_input('lat')
+    long = st.sidebar.number_input('long')
+    lat = st.sidebar.number_input('lat')
 
     if long is not None and lat is not None:
         region = ee.Geometry.Point([long, lat])
