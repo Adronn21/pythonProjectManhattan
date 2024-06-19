@@ -16,6 +16,12 @@ def setup():
 
 # Main Streamlit app
 def main():
+    # builds the sidebar menu
+    with st.sidebar:
+        st.page_link('streamlit_app.py', label='Individual Checker', icon='🔥')
+        st.page_link('pages/basemap.py', label='Competition Checker', icon='🛡️')
+
+    st.title(f'🔥 Individual Checker')
     # Execute setup function
     setup_result = setup()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
