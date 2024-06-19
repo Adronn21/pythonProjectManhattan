@@ -8,31 +8,27 @@ import zipfile
 import tempfile
 import os
 
-# Function to run once when page loads
+
 def setup():
     st.set_page_config(layout="wide", page_title="Satellite imagery", page_icon='🛰️')
     st.header("🛰️Satellite Imagery")
-    return "Initialization done."
 
 def Navbar():
     with st.sidebar:
         st.page_link('app.py', label='Satellite imagery', icon='🛰️')
         st.page_link('pages/graph.py', label='Graph', icon='📈')
 
-# Main Streamlit app
 def main():
-    # Execute setup function
-    setup_result = setup()
+    setup()
     Navbar()
 
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
     row2_col1, row2_col2, row2_col3 = st.columns([1, 1, 1])
 
-
     Map = geemap.Map()
 
-    # Dictionary of datasets
+    # Datasets
     datasets = {
         'Sentinel-2': {
             'collection': 'COPERNICUS/S2_SR_HARMONIZED',
@@ -70,7 +66,7 @@ def main():
         }
     }
 
-    # Index definitions
+    # Indexes
     indexes = {
         "NDVI": "(NIR - RED) / (NIR + RED)",
         "EVI": "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))",
@@ -98,6 +94,7 @@ def main():
 
         filtered_images = collection.filterBounds(region) \
             .filterDate(f'{year}-01-01', f'{year}-12-31')
+
         if satellite == 'Sentinel-2':
             return filtered_images.filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
                 .filter(ee.Filter.lt('SNOW_ICE_PERCENTAGE', 20))
@@ -108,8 +105,10 @@ def main():
     def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
         filtered_images = get_filtered_images(satellite, year, region)
         median_image = filtered_images.median()
+
         if clip:
             median_image = median_image.clip(region)
+
         rgb_bands = [datasets[satellite]['bands'][i] for i in range(0, 3)]
 
         vis_params = {
@@ -127,6 +126,7 @@ def main():
     def calc_index(satellite, index_name, year, region, clip):
         filtered_images = get_filtered_images(satellite, year, region)
         image = filtered_images.median()
+
         red_band = datasets[satellite]['bands'][0]
         blue_band = datasets[satellite]['bands'][1]
         green_band = datasets[satellite]['bands'][2]
@@ -169,7 +169,7 @@ def main():
     with sidebar_col2:
         lat = st.number_input('Latitude', value=0)
 
-    if long !=0 and lat !=0:
+    if long != 0 and lat != 0:
         coords = ee.Geometry.Point([long, lat])
 
     st.sidebar.markdown("<h3 style='text-align: center; color: grey;'>OR</h3>", unsafe_allow_html=True)
@@ -217,13 +217,17 @@ def main():
 
     with row0_col1:
         sat = st.selectbox("Select a satellite", list(datasets.keys()), index=0)
+
     with row0_col2:
         years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1] + 1))
         selected_year = st.selectbox("Select a year", years, index=len(years) - 1)
+
     with row0_col3:
         brightness = st.number_input("Set brightness", value=3)
+
     with row0_col4:
         gamma = st.number_input("Set gamma", value=1.4)
+
     with row0_col5:
         st.markdown("""""")
         st.markdown("""""")
@@ -236,15 +240,16 @@ def main():
             main_color = st.color_picker('Main color', value='#00ff00')
             mid_color = st.color_picker('Mid color', value='#ffff00')
             secondary_color = st.color_picker("Secondary color", value='#ff0000')
+
     if coords is not None and roi is None:
         Map.centerObject(coords, zoom=10)
         add_rgb_layer_to_map(Map, sat, selected_year, coords, brightness, None, gamma)
+
     if selected_year is not None and sat is not None and roi is not None:
         Map.centerObject(roi, zoom=10)
-        # Add RGB layer
+
         add_rgb_layer_to_map(Map, sat, selected_year, roi, brightness, clip, gamma)
 
-        # Add index layer if checked
         if check_index:
             index_image, stats = calc_index(sat, index_name, selected_year, roi, clip)
             Map.addLayer(index_image,
