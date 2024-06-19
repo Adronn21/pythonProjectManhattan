@@ -10,19 +10,19 @@ import os
 
 # Function to run once when page loads
 def setup():
-    st.set_page_config(layout="wide")
+    st.set_page_config(layout="wide", page_title="Satellite imagery")
+    st.header("Satellite Imagery")
     return "Initialization done."
 
 # Main Streamlit app
 def main():
-    setup_result = setup()
     # builds the sidebar menu
     with st.sidebar:
         st.page_link('app.py', label='Individual Checker')
         st.page_link('pages/basemap.py', label='Competition Checker')
 
-
-
+    # Execute setup function
+    setup_result = setup()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
     row2_col1, row2_col2, row2_col3 = st.columns([1, 1, 1])
