@@ -230,8 +230,8 @@ def main():
             with row2_col2:
                 # Plot a bar chart of index statistics
                 fig, ax = plt.subplots()
-                labels = ['Mean', 'Min', 'Max', 'Std Dev']
-                values = [stats[f"{index_name}_mean"], stats[f"{index_name}_min"],
+                labels = ['Min', 'Mean', 'Max', 'Std Dev']
+                values = [stats[f"{index_name}_min"], stats[f"{index_name}_mean"],
                           stats[f"{index_name}_max"], stats[f"{index_name}_stdDev"]]
                 ax.bar(labels, values, color=[main_color, secondary_color, 'blue', 'green'])
                 ax.set_title(f'{index_name} Statistics')
