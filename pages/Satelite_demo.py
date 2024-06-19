@@ -200,9 +200,9 @@ def main():
         years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1] + 1))
         selected_year = st.selectbox("Select a year", years, index=len(years) - 1)
     with row0_col3:
-        brightness = st.number_input("Set brightness", value='3')
+        brightness = st.number_input("Set brightness", value=3)
     with row0_col4:
-        gamma = st.number_input("Set gamma", value='1.4')
+        gamma = st.number_input("Set gamma", value=1.4)
     with row0_col5:
         st.markdown("""""")
         st.markdown("""""")
