@@ -238,12 +238,12 @@ def main():
                 ax.set_ylabel('Value')
                 ax.set_xlabel('Statistics')
                 st.pyplot(fig)
-
-                st.subheader(f"{index_name} Statistics")
-                st.write("Mean:", stats[f"{index_name}_mean"])
-                st.write("Min:", stats[f"{index_name}_min"])
-                st.write("Max:", stats[f"{index_name}_max"])
-                st.write("Std Dev:", stats[f"{index_name}_stdDev"])
+                with row2_col3:
+                    st.subheader(f"{index_name} Statistics")
+                    st.write("Mean:", stats[f"{index_name}_mean"])
+                    st.write("Min:", stats[f"{index_name}_min"])
+                    st.write("Max:", stats[f"{index_name}_max"])
+                    st.write("Std Dev:", stats[f"{index_name}_stdDev"])
 
         Map.add_gdf(gdf, 'polygon')
 
