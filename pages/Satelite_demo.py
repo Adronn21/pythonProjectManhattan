@@ -152,7 +152,9 @@ def main():
         return index, stats
 
     roi = None
-
+    cords = st.sidebar.text_input('ROI')
+    if cords is not None:
+        region = ee.Geometry.Point([f'{cords}'])
     # Upload a zipped shapefile
     uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
