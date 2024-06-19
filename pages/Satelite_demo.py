@@ -158,7 +158,7 @@ def main():
     if long !=0 and lat !=0:
         coords = ee.Geometry.Point([long, lat])
 
-    st.sidebar.markdown('''---OR---''')
+    st.sidebar.markdown("""---""")
 
     # Upload a zipped shapefile
     uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
