@@ -154,7 +154,7 @@ def main():
     roi = None
     coords = None
     long = st.sidebar.number_input('Longitude')
-    lat = st.sidebar.number_input('Latitude')
+    lat = st.sidebar.number_input('Latitude', step=0)
     if long !=0 and lat !=0:
         coords = ee.Geometry.Point([long, lat])
 
