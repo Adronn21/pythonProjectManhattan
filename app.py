@@ -10,7 +10,6 @@ import os
 
 # Function to run once when page loads
 def setup():
-    st.set_page_config(layout="wide")
     return "Initialization done."
 
 # Main Streamlit app
