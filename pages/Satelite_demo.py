@@ -32,6 +32,14 @@ def main():
             'bands': ['B4', 'B3', 'B2', 'B8', 'B5'],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
             'year_range': [2019, 2023]
         },
+        'Landsat-5': {
+            'collection': 'LANDSAT/LT05/C02/T1_L2',
+            'cloud_mask_band': 'QA_PIXEL',
+            'cloud_mask_value': 1 << 1 | 1 << 3 | 1 << 4 | 1 << 5,
+            'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B3"],
+            # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+            'year_range': [1985, 2011]
+        },
         'Landsat-7': {
             'collection': 'LANDSAT/LE07/C02/T1_L2',
             'cloud_mask_band': 'QA_PIXEL',
