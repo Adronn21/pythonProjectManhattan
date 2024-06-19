@@ -218,7 +218,7 @@ def main():
     with row0_col5:
         st.markdown("""""")
         st.markdown("""""")
-        clip = st.toggle("Clip image")
+        clip = st.toggle("Clip")
 
     with row1_col2:
         check_index = st.toggle("Add Index")
