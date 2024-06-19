@@ -21,7 +21,6 @@ def main():
         st.page_link('streamlit_app.py', label='Individual Checker')
         st.page_link('pages/basemap.py', label='Competition Checker')
 
-    st.title(f'🔥 Individual Checker')
     # Execute setup function
     setup_result = setup()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
