@@ -16,7 +16,7 @@ def setup():
 
 def Navbar():
     with st.sidebar:
-        st.page_link('app.py', label='Individual Checker', icon='🔥')
+        st.page_link('app.py', label='Individual Checker', icon='🛰')
         st.page_link('pages/basemap.py', label='Competition Checker', icon='🛡️')
 
 # Main Streamlit app
