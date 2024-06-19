@@ -157,7 +157,7 @@ def main():
     with sidebar_col1:
         long = st.number_input('Longitude', value=0)
     with sidebar_col2:
-        lat = st.sidebar.number_input('Latitude', value=0)
+        lat = st.number_input('Latitude', value=0)
 
     if long !=0 and lat !=0:
         coords = ee.Geometry.Point([long, lat])
