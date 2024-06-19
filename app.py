@@ -7,10 +7,10 @@ from io import BytesIO
 import zipfile
 import tempfile
 import os
-st.set_page_config(layout="wide")
+
 # Function to run once when page loads
 def setup():
-
+    st.set_page_config(layout="wide")
     return "Initialization done."
 
 # Main Streamlit app
