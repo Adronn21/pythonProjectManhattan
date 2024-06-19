@@ -155,7 +155,7 @@ def main():
     coords = None
     sidebar_col1, sidebar_col2 = st.sidebar.columns([1, 1])
     with sidebar_col1:
-        long = st.sidebar.number_input('Longitude', value=0)
+        long = st.number_input('Longitude', value=0)
     with sidebar_col2:
         lat = st.sidebar.number_input('Latitude', value=0)
 
