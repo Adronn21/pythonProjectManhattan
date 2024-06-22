@@ -288,7 +288,8 @@ def main():
 
         for year in years:
             index_image, stats = calc_index(satellite, index_name, year, region, clip)
-            index_values.append(stats[f"{index_name}_mean"])
+            graph_data = st.selectbox("Данные", list("max", "mean", "min"), value="mean")
+            index_values.append(stats[f"{index_name}_{graph_data}"])
 
         df = pd.DataFrame({
             'Year': years,
