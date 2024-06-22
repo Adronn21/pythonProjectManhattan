@@ -7,8 +7,7 @@ from io import BytesIO
 import zipfile
 import tempfile
 import os
-from app import Navbar
-from app import mask_clouds
+from app import Navbar, mask_clouds
 
 
 def setup():
