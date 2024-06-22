@@ -72,7 +72,7 @@ indexes = {
 }
 
 # Function to mask clouds
-def mask_clouds(image, dataset):
+def Mask_clouds(image, dataset):
     cloud_mask_band = datasets[dataset]['cloud_mask_band']
     cloud_mask_value = datasets[dataset]['cloud_mask_value']
     cloud_mask = image.select(cloud_mask_band).bitwiseAnd(cloud_mask_value).eq(0)
@@ -90,7 +90,7 @@ def get_filtered_images(satellite, year, region):
         return filtered_images.filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
             .filter(ee.Filter.lt('SNOW_ICE_PERCENTAGE', 20))
     else:
-        return filtered_images.map(lambda image: mask_clouds(image, satellite))
+        return filtered_images.map(lambda image: Mask_clouds(image, satellite))
 
 # Function to add RGB layer to map
 def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
