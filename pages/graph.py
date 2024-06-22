@@ -8,6 +8,12 @@ import zipfile
 import tempfile
 import os
 from app import Navbar
+from app import datasets
+from app import indexes
+from app import mask_clouds
+from app import get_filtered_images
+from app import add_rgb_layer_to_map
+from app import calc_index
 
 def setup():
     st.set_page_config(layout="wide", page_title="Graph", page_icon='📈')
@@ -65,6 +71,13 @@ def main():
 
             if not gdf.empty:
                 roi = geemap.geopandas_to_ee(gdf)
+
+    with row0_col1:
+        sat = st.selectbox("Select a satellite", list(datasets.keys()), index=0)
+
+    with row0_col2:
+        years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1] + 1))
+        selected_year = st.selectbox("Select a year", years, index=len(years) - 1)
 
 if __name__ == "__main__":
     main()
