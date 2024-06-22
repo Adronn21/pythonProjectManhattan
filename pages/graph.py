@@ -8,7 +8,7 @@ import zipfile
 import tempfile
 import os
 from app import Navbar
-from ..app import mask_clouds
+from app import mask_clouds
 
 
 def setup():
