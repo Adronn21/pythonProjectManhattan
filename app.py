@@ -315,7 +315,7 @@ def main():
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
             end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
                                        max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
-            graph_data = st.checkbox("Данные", ["Max", "Mean", "Min"], value=1)
+            graph_data = st.checkbox("Данные", ["Max", "Mean", "Min"])
 
             if start_year <= end_year:
                 if coords is not None or roi is not None:
