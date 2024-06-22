@@ -8,7 +8,7 @@ from io import BytesIO
 import zipfile
 import tempfile
 import os
-
+from matplotlib.ticker import FixedLocator, FixedFormatter
 
 def setup():
     st.set_page_config(layout="wide", page_title="Satellite imagery", page_icon='🛰️')
@@ -311,7 +311,8 @@ def main():
         ax.set_ylabel(f'{index_name} Value')
         ax.grid(True)
         ax.legend()
-
+        ax.xaxis.set_major_locator(FixedLocator(years))
+        ax.xaxis.set_major_formatter(FixedFormatter(years))
         return fig, df
 
     with row2_col1:
