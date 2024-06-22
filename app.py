@@ -236,6 +236,7 @@ def main():
         st.markdown("""""")
         st.markdown("""""")
         clip = st.toggle("Clip")
+        graph_check = st.toggle("Graph")
 
     with row1_col2:
         check_index = st.toggle("Add Index")
@@ -288,7 +289,7 @@ def main():
 
         for year in years:
             index_image, stats = calc_index(satellite, index_name, year, region, clip)
-            index_values.append(stats[f"{index_name}_{graph_data}"])
+            index_values.append(stats[f"{index_name}_{graph_data.lower()}"])
 
         df = pd.DataFrame({
             'Year': years,
@@ -305,13 +306,13 @@ def main():
         return fig, df
 
     with row2_col1:
-        if check_index and roi is not None or coords is not None:
+        if check_index and roi is not None or coords is not None and graph_check:
             st.markdown("### График изменения индекса")
             start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
             end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
                                        max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
-            graph_data = st.selectbox("Данные", ["max", "mean", "min"], index=1)
+            graph_data = st.selectbox("Данные", ["Max", "Mean", "Min"], index=1)
 
             if start_year <= end_year:
                 if coords is not None or roi is not None:
