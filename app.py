@@ -245,7 +245,7 @@ def main():
             mid_color = st.color_picker('Mid color', value='#ffff00')
             secondary_color = st.color_picker("Secondary color", value='#ff0000')
             st.markdown("""---""")
-            graph_check = st.sidebar.toggle("Graph")
+            graph_check = st.toggle("Graph")
 
     if coords is not None and roi is None:
         Map.centerObject(coords, zoom=10)
