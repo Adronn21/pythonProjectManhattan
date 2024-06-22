@@ -322,7 +322,7 @@ def main():
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
             end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
                                        max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
-            graph_data = st.selectbox("Данные", ["All", "Max", "Mean", "Min"], index=1)
+            graph_data = st.selectbox("Данные", ["All", "Max", "Mean", "Min"], index=0)
 
             # Обработка выбора "All"
             if "All" in graph_data:
