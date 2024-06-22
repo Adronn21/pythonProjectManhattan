@@ -284,14 +284,14 @@ def main():
     with row1_col1:
         Map.to_streamlit(height=600)
 
-    def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip, graph_data):
+    def plot_index_over_time(satellite, index, start_year, end_year, region, clip, graph_data):
         years = list(range(start_year, end_year + 1))
         index_values = {data: [] for data in graph_data}  # Use a dictionary to store values for each data type
 
         for year in years:
-            index_image, stats = calc_index(satellite, index_name, year, region, clip)
+            index_image, stats = calc_index(satellite, index, year, region, clip)
             for data in graph_data:
-                index_values[data].append(stats[f"{index_name}_{data.lower()}"])
+                index_values[data].append(stats[f"{index}_{data.lower()}"])
 
         # Ensure all lists have the same length
         min_length = min(len(index_values[data]) for data in graph_data)
@@ -300,15 +300,15 @@ def main():
 
         df = pd.DataFrame({
             'Year': years[:min_length],  # Trim years to match the minimum length of data
-            **{f'{index_name}_{data}': index_values[data] for data in graph_data}
+            **{f'{index}_{data}': index_values[data] for data in graph_data}
         })
 
         fig, ax = plt.subplots()
         for data in graph_data:
-            ax.plot(df['Year'], df[f'{index_name}_{data}'], marker='o', linestyle='-', label=data)
-        ax.set_title(f'{index_name} over Time ({int(start_year)}-{int(end_year)})')
+            ax.plot(df['Year'], df[f'{index}_{data}'], marker='o', linestyle='-', label=data)
+        ax.set_title(f'{index} over Time ({int(start_year)}-{int(end_year)})')
         ax.set_xlabel('Year')
-        ax.set_ylabel(f'{index_name} Value')
+        ax.set_ylabel(f'{index} Value')
         ax.grid(True)
         ax.legend()
         ax.xaxis.set_major_locator(FixedLocator(years))
@@ -322,13 +322,12 @@ def main():
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
             end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
                                        max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
-            graph_data = st.selectbox("Данные", ["Max", "Mean", "Min", "All"], index=1)
+            graph_data = st.selectbox("Данные", ["All", "Max", "Mean", "Min"], index=1)
 
             # Обработка выбора "All"
             if "All" in graph_data:
                 graph_data = ["Max", "Mean", "Min"]  # Если выбран "All", то используем все три опции
-            else:
-                graph_data = graph_data # Преобразуем выбранный пункт в список для единообразия
+
 
             if start_year <= end_year:
                 if roi is not None or coords is not None:
