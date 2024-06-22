@@ -305,7 +305,7 @@ def main():
         return fig, df
 
     with row2_col1:
-        if index_name:
+        if check_index:
             st.markdown("### График изменения индекса")
             start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
