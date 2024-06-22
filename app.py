@@ -233,9 +233,8 @@ def main():
         gamma = st.number_input("Set gamma", value=1.4)
 
     with row0_col5:
-        st.markdown("""""")
-        st.markdown("""""")
         clip = st.toggle("Clip")
+        graph_check = st.toggle("Graph")
 
     with row1_col2:
         check_index = st.toggle("Add Index")
@@ -304,8 +303,7 @@ def main():
 
         return fig, df
 
-    st.sidebar.markdown("""---""")
-    graph_check = st.sidebar.toggle("Graph")
+
 
     with row2_col1:
         if check_index and graph_check and roi is not None or coords is not None:
