@@ -2,7 +2,7 @@ import ee
 import streamlit as st
 import geemap.foliumap as geemap
 import geopandas as gpd
-import pandas as pd
+import pandas as pd6
 import matplotlib.pyplot as plt
 from io import BytesIO
 import zipfile
@@ -305,22 +305,23 @@ def main():
         return fig, df
 
     with row2_col1:
-        st.markdown("### График изменения индекса")
-        start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
-                                     max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
-        end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
-                                   max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
+        if index_name:
+            st.markdown("### График изменения индекса")
+            start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
+                                         max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
+            end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
+                                       max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
 
-        if start_year <= end_year:
-            if coords is not None or roi is not None:
-                region = coords if coords is not None else roi
-                fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, clip)
-                st.pyplot(fig)
-                st.write(df)
+            if start_year <= end_year:
+                if coords is not None or roi is not None:
+                    region = coords if coords is not None else roi
+                    fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, clip)
+                    st.pyplot(fig)
+                    st.write(df)
+                else:
+                    st.error("Пожалуйста, установите точку интереса или загрузите shapefile.")
             else:
-                st.error("Пожалуйста, установите точку интереса или загрузите shapefile.")
-        else:
-            st.error("Конечный год должен быть больше или равен начальному году.")
+                st.error("Конечный год должен быть больше или равен начальному году.")
 
 if __name__ == "__main__":
     main()
