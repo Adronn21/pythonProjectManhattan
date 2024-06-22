@@ -281,15 +281,14 @@ def main():
 
     with row1_col1:
         Map.to_streamlit(height=600)
-    l=["max", "mean", "min"]
-    def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip):
+
+    def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip, graph_data):
         years = list(range(start_year, end_year + 1))
         index_values = []
 
         for year in years:
             index_image, stats = calc_index(satellite, index_name, year, region, clip)
-            graph_data = 'mean'
-            index_values.append(stats[f"{index_name}_mean"])
+            index_values.append(stats[f"{index_name}_{graph_data}"])
 
         df = pd.DataFrame({
             'Year': years,
@@ -312,11 +311,12 @@ def main():
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
             end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
                                        max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
+            graph_data = st.selectbox("Данные", ["max", "mean", "min"], value="mean")
 
             if start_year <= end_year:
                 if coords is not None or roi is not None:
                     region = coords if coords is not None else roi
-                    fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, clip)
+                    fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, clip, graph_data)
                     st.pyplot(fig)
                     st.write(df)
                 else:
