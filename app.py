@@ -2,7 +2,7 @@ import ee
 import streamlit as st
 import geemap.foliumap as geemap
 import geopandas as gpd
-import pandas as pd6
+import pandas as pd
 import matplotlib.pyplot as plt
 from io import BytesIO
 import zipfile
