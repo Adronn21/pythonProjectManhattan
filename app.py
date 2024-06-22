@@ -281,14 +281,14 @@ def main():
 
     with row1_col1:
         Map.to_streamlit(height=600)
-
+    l=["max", "mean", "min"]
     def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip):
         years = list(range(start_year, end_year + 1))
         index_values = []
 
         for year in years:
             index_image, stats = calc_index(satellite, index_name, year, region, clip)
-            graph_data = st.selectbox("Данные", ["max", "mean", "min"], value="mean")
+            graph_data = st.selectbox("Данные", l, value="mean")
             index_values.append(stats[f"{index_name}_{graph_data}"])
 
         df = pd.DataFrame({
