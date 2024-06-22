@@ -9,10 +9,7 @@ import tempfile
 import os
 from app import Navbar
 
-# from app import mask_clouds
-# from app import get_filtered_images
-# from app import add_rgb_layer_to_map
-# from app import calc_index
+
 
 def setup():
     st.set_page_config(layout="wide", page_title="Graph", page_icon='📈')
