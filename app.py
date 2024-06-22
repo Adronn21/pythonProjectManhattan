@@ -284,15 +284,15 @@ def main():
     with row1_col1:
         Map.to_streamlit(height=600)
 
-    def plot_index_over_time(satellite, index, start_year, end_year, region, clip, graph_data):
+    def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip, graph_data):
         years = list(range(start_year, end_year + 1))
         index_values = {data: [] for data in graph_data}  # Use a dictionary to store values for each data type
 
         for year in years:
-            index_image, stats = calc_index(satellite, index, year, region, clip)
+            index_image, stats = calc_index(satellite, index_name, year, region, clip)
             for data in graph_data:
-                index_values[data].append(stats[f"{index}_{data.lower()}"])
 
+                st.write(index_values[data].append(stats[f"{index_name}_{data.lower()}"]))
         # Ensure all lists have the same length
         min_length = min(len(index_values[data]) for data in graph_data)
         for data in graph_data:
@@ -300,15 +300,15 @@ def main():
 
         df = pd.DataFrame({
             'Year': years[:min_length],  # Trim years to match the minimum length of data
-            **{f'{index}_{data}': index_values[data] for data in graph_data}
+            **{f'{index_name}_{data}': index_values[data] for data in graph_data}
         })
 
         fig, ax = plt.subplots()
         for data in graph_data:
-            ax.plot(df['Year'], df[f'{index}_{data}'], marker='o', linestyle='-', label=data)
-        ax.set_title(f'{index} over Time ({int(start_year)}-{int(end_year)})')
+            ax.plot(df['Year'], df[f'{index_name}_{data}'], marker='o', linestyle='-', label=data)
+        ax.set_title(f'{index_name} over Time ({int(start_year)}-{int(end_year)})')
         ax.set_xlabel('Year')
-        ax.set_ylabel(f'{index} Value')
+        ax.set_ylabel(f'{index_name} Value')
         ax.grid(True)
         ax.legend()
         ax.xaxis.set_major_locator(FixedLocator(years))
