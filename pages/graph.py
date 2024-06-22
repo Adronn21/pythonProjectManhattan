@@ -22,21 +22,9 @@ def main():
     row1_col1, row1_col2 = st.columns([5, 1])
     row2_col1, row2_col2, row2_col3 = st.columns([1, 1, 1])
     roi = None
-    coords = None
+
 
     st.sidebar.markdown("""---""")
-    st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>", unsafe_allow_html=True)
-    sidebar_col1, sidebar_col2 = st.sidebar.columns([1, 1])
-    with sidebar_col1:
-        long = st.number_input('Longitude', value=0)
-    with sidebar_col2:
-        lat = st.number_input('Latitude', value=0)
-
-    if long != 0 and lat != 0:
-        coords = ee.Geometry.Point([long, lat])
-
-    st.sidebar.markdown("<h3 style='text-align: center; color: grey;'>OR</h3>", unsafe_allow_html=True)
-
     # Upload a zipped shapefile
     uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
@@ -70,8 +58,8 @@ def main():
                 buf.seek(0)
 
                 # Display the plot in Streamlit
-                with row2_col1:
-                    st.image(buf, caption='Geopandas Plot')
+
+                st.image(buf, caption='Geopandas Plot')
             else:
                 st.error("Shapefile (.shp) not found in the uploaded zip file.")
 
