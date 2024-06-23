@@ -12,7 +12,7 @@ def main():
     setup()
     Navbar()
 
-    st.markdown("<H1>Authors:</H1>")
+    st.markdown("<h1 style='text-align: center; color: grey;'>Set point of interest</h1>")
     st.markdown("""Baigabulov Adil""")
     st.markdown("""Bekenov Bekzhan""")
     st.markdown("""Ospan Akhmet""")
