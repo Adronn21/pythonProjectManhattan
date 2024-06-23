@@ -3,7 +3,7 @@ import streamlit as st
 import geemap.foliumap as geemap
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from io import BytesIO
+from io import BytesIO, StringIO
 import zipfile
 import tempfile
 import os
