@@ -286,39 +286,40 @@ def main():
 
     def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip, graph_data):
         years = list(range(start_year, end_year + 1))
-        index_values = []
+        index_values_dict = {data: [] for data in graph_data}
 
         for year in years:
             index_image, stats = calc_index(satellite, index_name, year, region, clip)
-            index_values.append(stats[f"{index_name}_{graph_data.lower()}"])
+            for data in graph_data:
+                index_values_dict[data].append(stats[f"{index_name}_{data.lower()}"])
 
-        df = pd.DataFrame({
-            'Year': years,
-            'Index Value': index_values
-        })
+        df = pd.DataFrame({'Year': years})
+        for data in graph_data:
+            df[data] = index_values_dict[data]
 
         fig, ax = plt.subplots()
-        ax.plot(df['Year'], df['Index Value'], marker='o', linestyle='-')
+        for data in graph_data:
+            ax.plot(df['Year'], df[data], marker='o', linestyle='-', label=f'{data} {index_name}')
+
         ax.set_title(f'{index_name} over Time ({start_year}-{end_year})')
         ax.set_xlabel('Year')
         ax.set_ylabel(f'{index_name} Value')
         ax.grid(True)
+        ax.legend()
 
         return fig, df
 
-
-
     with row2_col1:
-        if check_index and graph_check and roi is not None or coords is not None:
+        if check_index and graph_check and (roi is not None or coords is not None):
             st.markdown("### График изменения индекса")
             start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
             end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
                                        max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
-            graph_data = st.checkbox("Данные", ["Max", "Mean", "Min"])
+            graph_data = st.multiselect("Данные", ["Max", "Mean", "Min"])
 
             if start_year <= end_year:
-                if coords is not None or roi is not None:
+                if graph_data and (coords is not None or roi is not None):
                     region = coords if coords is not None else roi
                     fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, clip, graph_data)
                     st.pyplot(fig)
@@ -327,6 +328,7 @@ def main():
                     st.error("Пожалуйста, установите точку интереса или загрузите shapefile.")
             else:
                 st.error("Конечный год должен быть больше или равен начальному году.")
+
 
 if __name__ == "__main__":
     main()
