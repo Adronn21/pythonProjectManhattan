@@ -158,8 +158,7 @@ def main():
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
     row2_col1, row2_col2, row2_col3 = st.columns([1, 1, 1])
-    row3_col1, row3_col2, row3_col3, row3_col4 = st.columns([1, 1, 2, 5])
-    row4_col1, row4_col2 = st.columns([1, 1])
+
 
     Map = geemap.Map()
 
@@ -288,55 +287,6 @@ def main():
 
     with row1_col1:
         Map.to_streamlit(height=600)
-
-    def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip, graph_data):
-        years = list(range(start_year, end_year + 1))
-        index_values_dict = {data: [] for data in graph_data}
-
-        for year in years:
-            index_image, stats = calc_index(satellite, index_name, year, region, clip)
-            for data in graph_data:
-                index_values_dict[data].append(stats[f"{index_name}_{data.lower()}"])
-
-        df = pd.DataFrame({'Year': years})
-        for data in graph_data:
-            df[data] = index_values_dict[data]
-
-        fig, ax = plt.subplots()
-        for data in graph_data:
-            ax.plot(df['Year'], df[data], marker='o', linestyle='-', label=f'{data} {index_name}')
-
-        ax.set_title(f'{index_name} over Time ({start_year}-{end_year})')
-        ax.set_xlabel('Year')
-        ax.set_ylabel(f'{index_name} Value')
-        ax.grid(True)
-        ax.legend()
-
-        return fig, df
-
-    with row2_col1:
-        if check_index and graph_check and (roi is not None or coords is not None):
-            st.markdown("### График изменения индекса")
-            with row3_col1:
-                start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
-                                             max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
-            with row3_col2:
-                end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
-                                           max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
-            with row3_col3:
-                graph_data = st.multiselect("Данные", ["Max", "Mean", "Min"], default=("Mean"))
-
-            if start_year <= end_year:
-                if graph_data is not None and (coords is not None or roi is not None):
-                    region = coords if coords is not None else roi
-                    fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, clip, graph_data)
-                    with row4_col1:
-                        st.pyplot(fig)
-                    with row4_col2:
-                        df['Year'] = df['Year'].astype(str)
-                        st.write(df)
-            else:
-                st.error("Конечный год должен быть больше или равен начальному году.")
 
 
 if __name__ == "__main__":
