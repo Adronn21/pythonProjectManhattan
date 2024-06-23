@@ -4,7 +4,6 @@ import streamlit as st
 import geemap.foliumap as geemap
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from io import BytesIO
 import zipfile
 import tempfile
 import os
@@ -12,9 +11,11 @@ from app import Navbar, calc_index
 
 
 def setup():
-    st.set_page_config(layout="wide", page_title="Graph", page_icon='📈')
+    st.set_page_config(layout="wide", page_title="Yearly index delta Graph", page_icon='📈')
     st.header("📈Graph")
     return "Initialization done."
+
+
 # Datasets
 datasets = {
     'Sentinel-2': {
@@ -27,28 +28,27 @@ datasets = {
         'cloud_mask_band': 'QA_PIXEL',
         'cloud_mask_value': 1 << 1 | 1 << 3 | 1 << 4,
         'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B3"],
-        # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
         'year_range': [1985, 2011]
     },
     'Landsat-7': {
         'collection': 'LANDSAT/LE07/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
         'cloud_mask_value': 1 << 1 | 1 << 3 | 1 << 4 | 1 << 5,
-        'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B3"],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+        'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B3"],
         'year_range': [2000, 2023]
     },
     'Landsat-8': {
         'collection': 'LANDSAT/LC08/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
         'cloud_mask_value': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5,
-        'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5", "SR_B4"],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+        'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5", "SR_B4"],
         'year_range': [2014, 2023]
     },
     'MODIS': {
         'collection': 'MODIS/006/MOD09GA',
         'cloud_mask_band': 'state_1km',
         'cloud_mask_value': 1 << 10 | 1 << 11,
-        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b02', 'sur_refl_b01'],  # 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b02', 'sur_refl_b01'],
         'year_range': [2001, 2022]
     }
 }
@@ -68,13 +68,12 @@ indexes = {
 }
 
 
-
-def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip, graph_data):
+def plot_index_over_time(satellite, index_name, start_year, end_year, region, graph_data):
     years = list(range(start_year, end_year + 1))
     index_values_dict = {data: [] for data in graph_data}
 
     for year in years:
-        index_image, stats = calc_index(satellite, index_name, year, region, clip)
+        index_image, stats = calc_index(satellite, index_name, year, region, False)
         for data in graph_data:
             index_values_dict[data].append(stats[f"{index_name}_{data.lower()}"])
 
@@ -95,20 +94,30 @@ def plot_index_over_time(satellite, index_name, start_year, end_year, region, cl
     return fig, df
 
 
-
 def main():
     # Execute setup function
     setup()
     Navbar()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
-    row1_col1, row1_col2 = st.columns([5, 1])
-    row2_col1, row2_col2, row2_col3 = st.columns([1, 1, 1])
-    row3_col1, row3_col2, row3_col3, row3_col4 = st.columns([1, 1, 2, 5])
-    row4_col1, row4_col2 = st.columns([1, 1])
-    roi = None
+    row1_col1, row1_col2 = st.columns([1, 1])
 
+    roi = None
+    coords = None
 
     st.sidebar.markdown("""---""")
+    st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>",
+                        unsafe_allow_html=True)
+    sidebar_col1, sidebar_col2 = st.sidebar.columns([1, 1])
+    with sidebar_col1:
+        long = st.number_input('Longitude', value=0.0)
+    with sidebar_col2:
+        lat = st.number_input('Latitude', value=0.0)
+
+    if long != 0 and lat != 0:
+        coords = ee.Geometry.Point([long, lat])
+
+    st.sidebar.markdown("<h3 style='text-align: center; color: grey;'>OR</h3>", unsafe_allow_html=True)
+
     # Upload a zipped shapefile
     uploaded_shp_file = st.sidebar.file_uploader("Upload a Zipped Shapefile", type=["zip"])
 
@@ -129,21 +138,6 @@ def main():
             if shapefile_path:
                 # Read the shapefile into a GeoDataFrame
                 gdf = gpd.read_file(shapefile_path)
-
-                # Create the plot
-                fig, ax = plt.subplots()
-                gdf.plot(ax=ax)
-                plt.xticks(rotation=90, fontsize=7)
-                plt.yticks(fontsize=7)
-
-                # Save the plot to a BytesIO object
-                buf = BytesIO()
-                plt.savefig(buf, format='png')
-                buf.seek(0)
-
-                # Display the plot in Streamlit
-
-                st.image(buf, caption='Geopandas Plot')
             else:
                 st.error("Shapefile (.shp) not found in the uploaded zip file.")
 
@@ -154,38 +148,38 @@ def main():
         sat = st.selectbox("Select a satellite", list(datasets.keys()), index=0)
 
     with row0_col2:
-        years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1] + 1))
-        selected_year = st.selectbox("Select a year", years, index=len(years) - 1)
+        start_year = st.number_input("Start year", min_value=datasets[sat]['year_range'][0],
+                                     max_value=datasets[sat]['year_range'][1],
+                                     value=datasets[sat]['year_range'][0])
+    with row0_col3:
+        end_year = st.number_input("End year", min_value=datasets[sat]['year_range'][0],
+                                   max_value=datasets[sat]['year_range'][1],
+                                   value=datasets[sat]['year_range'][1])
+    with row0_col4:
+        index_name = st.selectbox('Select index', list(indexes.keys()), index=0)
 
-    with row2_col1:
-        if roi is not None:
-            st.markdown("### График изменения индекса")
-            with row3_col1:
-                start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
-                                             max_value=datasets[sat]['year_range'][1],
-                                             value=datasets[sat]['year_range'][0])
-            with row3_col2:
-                end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
-                                           max_value=datasets[sat]['year_range'][1],
-                                           value=datasets[sat]['year_range'][1])
-            with row3_col3:
-                graph_data = st.multiselect("Данные", ["Max", "Mean", "Min"], default=("Mean"))
+    with row0_col5:
+        graph_data = st.multiselect("Data", ["Max", "Mean", "Min"], default="Mean")
 
-            if start_year <= end_year:
-                if graph_data is not None and roi is not None:
+    if coords is not None and roi is None:
+        region = coords
+    elif roi is not None:
+        region = roi
+    else:
+        region = None
 
-                    fig, df = plot_index_over_time(sat, 'NDVI', start_year, end_year, roi, False, graph_data)
-                    with row4_col1:
-                        st.pyplot(fig)
-                    with row4_col2:
-                        df['Year'] = df['Year'].astype(str)
-                        st.write(df)
-            else:
-                st.error("Конечный год должен быть больше или равен начальному году.")
+    if start_year <= end_year:
+        if graph_data is not None and region is not None:
+            fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, graph_data)
+            with row1_col1:
+                st.pyplot(fig)
+            with row1_col2:
+                df['Year'] = df['Year'].astype(str)
+                st.write(df)
+    else:
+        st.error("Конечный год должен быть больше или равен начальному году.")
 
 
 if __name__ == "__main__":
     main()
-
-
 
