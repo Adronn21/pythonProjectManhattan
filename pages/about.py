@@ -45,7 +45,8 @@ def main():
                 Group 05-057-21-05 \
                 <br>The Department of Computer Science \
                 <br>Kazakh Agro-Technical Research University\
-                <br>Astana</p>",
+                <br>Astana\
+                <br>Kazakhstan</p>",
                 unsafe_allow_html=True)
 if __name__ == "__main__":
     main()
