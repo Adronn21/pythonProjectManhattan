@@ -244,8 +244,7 @@ def main():
             main_color = st.color_picker('Main color', value='#00ff00')
             mid_color = st.color_picker('Mid color', value='#ffff00')
             secondary_color = st.color_picker("Secondary color", value='#ff0000')
-            st.markdown("""---""")
-            graph_check = st.toggle("Graph")
+
 
     if coords is not None and roi is None:
         Map.centerObject(coords, zoom=10)
@@ -278,6 +277,9 @@ def main():
                     st.write("Mean:", stats[f"{index_name}_mean"])
                     st.write("Max:", stats[f"{index_name}_max"])
                     st.write("Std Dev:", stats[f"{index_name}_stdDev"])
+                    st.markdown("""---""")
+                    graph_check = st.toggle("Graph")
+
 
         Map.add_gdf(gdf, 'polygon')
 
@@ -310,7 +312,7 @@ def main():
         return fig, df
 
     with row2_col1:
-        if check_index and graph_check and (roi is not None or coords is not None):
+        if graph_check and (roi is not None or coords is not None):
             st.markdown("### График изменения индекса")
             start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
