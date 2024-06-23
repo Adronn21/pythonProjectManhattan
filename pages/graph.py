@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import zipfile
 import tempfile
 import os
-from app import Navbar, calc_index
+from app import navbar, calc_index
 
 
 def setup():
@@ -97,12 +97,12 @@ def plot_index_over_time(satellite, index_name, start_year, end_year, region, gr
 def main():
     # Execute setup function
     setup()
-    Navbar()
+    navbar()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([1, 1])
 
     roi = None
-    coords = None
+    coordinates = None
 
     st.sidebar.markdown("""---""")
     st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>",
@@ -114,7 +114,7 @@ def main():
         lat = st.number_input('Latitude', value=0.0)
 
     if long != 0 and lat != 0:
-        coords = ee.Geometry.Point([long, lat])
+        coordinates = ee.Geometry.Point([long, lat])
 
     st.sidebar.markdown("<h3 style='text-align: center; color: grey;'>OR</h3>", unsafe_allow_html=True)
 
@@ -161,8 +161,8 @@ def main():
     with row0_col5:
         graph_data = st.multiselect("Data", ["Max", "Mean", "Min"], default="Mean")
 
-    if coords is not None and roi is None:
-        region = coords
+    if coordinates is not None and roi is None:
+        region = coordinates
     elif roi is not None:
         region = roi
     else:
@@ -177,9 +177,8 @@ def main():
                 df['Year'] = df['Year'].astype(str)
                 st.write(df)
     else:
-        st.error("Конечный год должен быть больше или равен начальному году.")
+        st.error("End year should be greater ar equal to start year.")
 
 
 if __name__ == "__main__":
     main()
-

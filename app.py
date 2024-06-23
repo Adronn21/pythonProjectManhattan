@@ -14,7 +14,7 @@ def setup():
     st.header("🛰️Satellite Imagery")
 
 
-def Navbar():
+def navbar():
     with st.sidebar:
         st.page_link('app.py', label='Satellite imagery', icon='🛰️')
         st.page_link('pages/graph.py', label='Graph', icon='📈')
@@ -156,7 +156,7 @@ def calc_index(satellite, index_name, year, region, clip):
 
 def main():
     setup()
-    Navbar()
+    navbar()
 
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
@@ -165,10 +165,11 @@ def main():
     Map = geemap.Map()
 
     roi = None
-    coords = None
+    coordinates = None
 
     st.sidebar.markdown("""---""")
-    st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>", unsafe_allow_html=True)
+    st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>",
+                        unsafe_allow_html=True)
     sidebar_col1, sidebar_col2 = st.sidebar.columns([1, 1])
     with sidebar_col1:
         long = st.number_input('Longitude', value=0.0)
@@ -176,7 +177,7 @@ def main():
         lat = st.number_input('Latitude', value=0.0)
 
     if long != 0 and lat != 0:
-        coords = ee.Geometry.Point([long, lat])
+        coordinates = ee.Geometry.Point([long, lat])
 
     st.sidebar.markdown("<h3 style='text-align: center; color: grey;'>OR</h3>", unsafe_allow_html=True)
 
@@ -226,8 +227,8 @@ def main():
 
     with row0_col2:
         selected_year = st.number_input("Select a Year", min_value=datasets[sat]['year_range'][0],
-                                     max_value=datasets[sat]['year_range'][1],
-                                     value=datasets[sat]['year_range'][0])
+                                        max_value=datasets[sat]['year_range'][1],
+                                        value=datasets[sat]['year_range'][0])
 
     with row0_col3:
         brightness = st.number_input("Set brightness", value=3)
@@ -248,9 +249,9 @@ def main():
             mid_color = st.color_picker('Mid color', value='#ffff00')
             secondary_color = st.color_picker("Secondary color", value='#ff0000')
 
-    if coords is not None and roi is None:
-        Map.centerObject(coords, zoom=10)
-        add_rgb_layer_to_map(Map, sat, selected_year, coords, brightness, None, gamma)
+    if coordinates is not None and roi is None:
+        Map.centerObject(coordinates, zoom=10)
+        add_rgb_layer_to_map(Map, sat, selected_year, coordinates, brightness, None, gamma)
 
     if selected_year is not None and sat is not None and roi is not None:
         Map.centerObject(roi, zoom=10)
@@ -259,9 +260,8 @@ def main():
 
         if check_index:
             index_image, stats = calc_index(sat, index_name, selected_year, roi, clip)
-            Map.addLayer(index_image,
-                                       {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
-                                       f'{index_name},{sat} {selected_year}')
+            Map.addLayer(index_image, {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
+                         f'{index_name},{sat} {selected_year}')
             with row2_col2:
                 # Plot a bar chart of index statistics
                 fig, ax = plt.subplots()
