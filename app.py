@@ -164,6 +164,7 @@ def main():
 
     roi = None
     coords = None
+    graph_check = None
 
     st.sidebar.markdown("""---""")
     st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>", unsafe_allow_html=True)
