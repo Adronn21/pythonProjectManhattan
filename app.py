@@ -333,6 +333,7 @@ def main():
                     with row4_col1:
                         st.pyplot(fig)
                     with row4_col2:
+                        df['Year'] = df['Year'].astype(str)
                         st.write(df)
             else:
                 st.error("Конечный год должен быть больше или равен начальному году.")
