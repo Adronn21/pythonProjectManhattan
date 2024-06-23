@@ -324,7 +324,7 @@ def main():
                 end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
                                            max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
             with row3_col3:
-                graph_data = st.multiselect("Данные", ["Max", "Mean", "Min"])
+                graph_data = st.multiselect("Данные", ["Max", "Mean", "Min"], default=("Mean"))
 
             if start_year <= end_year:
                 if graph_data is not None and (coords is not None or roi is not None):
