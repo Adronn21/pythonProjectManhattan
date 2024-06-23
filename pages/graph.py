@@ -159,7 +159,7 @@ def main():
         index_name = st.selectbox('Select index', list(indexes.keys()), index=0)
 
     with row0_col5:
-        graph_data = st.multiselect("Data", ["Max", "Mean", "Min"], default="Mean")
+        graph_data = st.multiselect("Data", ["Max", "Mean", "Min"], default=("Max", "Mean", "Min"))
 
     if coordinates is not None and roi is None:
         region = coordinates
