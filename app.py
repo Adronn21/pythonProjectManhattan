@@ -1,10 +1,9 @@
+from io import BytesIO, StringIO
 import ee
 import streamlit as st
 import geemap.foliumap as geemap
 import geopandas as gpd
-import pandas as pd
 import matplotlib.pyplot as plt
-from io import BytesIO
 import zipfile
 import tempfile
 import os
@@ -20,6 +19,7 @@ def Navbar():
         st.page_link('app.py', label='Satellite imagery', icon='🛰️')
         st.page_link('pages/graph.py', label='Graph', icon='📈')
 
+
 # Datasets
 datasets = {
     'Sentinel-2': {
@@ -32,28 +32,27 @@ datasets = {
         'cloud_mask_band': 'QA_PIXEL',
         'cloud_mask_value': 1 << 1 | 1 << 3 | 1 << 4,
         'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B3"],
-        # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
         'year_range': [1985, 2011]
     },
     'Landsat-7': {
         'collection': 'LANDSAT/LE07/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
         'cloud_mask_value': 1 << 1 | 1 << 3 | 1 << 4 | 1 << 5,
-        'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B3"],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+        'bands': ['SR_B3', 'SR_B2', 'SR_B1', 'SR_B4', "SR_B3"],
         'year_range': [2000, 2023]
     },
     'Landsat-8': {
         'collection': 'LANDSAT/LC08/C02/T1_L2',
         'cloud_mask_band': 'QA_PIXEL',
         'cloud_mask_value': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5,
-        'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5", "SR_B4"],  # bands: 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+        'bands': ['SR_B4', 'SR_B3', 'SR_B2', "SR_B5", "SR_B4"],
         'year_range': [2014, 2023]
     },
     'MODIS': {
         'collection': 'MODIS/006/MOD09GA',
         'cloud_mask_band': 'state_1km',
         'cloud_mask_value': 1 << 10 | 1 << 11,
-        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b02', 'sur_refl_b01'],  # 0-Red, 1-Blue, 2-Green, 3-NIR, 4-Red Edge(or red)
+        'bands': ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b02', 'sur_refl_b01'],
         'year_range': [2001, 2022]
     }
 }
@@ -72,12 +71,14 @@ indexes = {
     "WBI": "NIR / GREEN"
 }
 
+
 # Function to mask clouds
-def Mask_clouds(image, dataset):
+def mask_clouds(image, dataset):
     cloud_mask_band = datasets[dataset]['cloud_mask_band']
     cloud_mask_value = datasets[dataset]['cloud_mask_value']
     cloud_mask = image.select(cloud_mask_band).bitwiseAnd(cloud_mask_value).eq(0)
     return image.updateMask(cloud_mask)
+
 
 # Function to get filtered images
 def get_filtered_images(satellite, year, region):
@@ -91,7 +92,8 @@ def get_filtered_images(satellite, year, region):
         return filtered_images.filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
             .filter(ee.Filter.lt('SNOW_ICE_PERCENTAGE', 20))
     else:
-        return filtered_images.map(lambda image: Mask_clouds(image, satellite))
+        return filtered_images.map(lambda image: mask_clouds(image, satellite))
+
 
 # Function to add RGB layer to map
 def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
@@ -113,6 +115,7 @@ def add_rgb_layer_to_map(m, satellite, year, region, brightness, clip, gamma):
     layer = m.addLayer(median_image, vis_params, f'{satellite} {year} RGB')
     m.centerObject(region, 10)
     return layer
+
 
 # Function to calculate index
 def calc_index(satellite, index_name, year, region, clip):
@@ -159,16 +162,14 @@ def main():
     row1_col1, row1_col2 = st.columns([5, 1])
     row2_col1, row2_col2, row2_col3 = st.columns([1, 1, 1])
 
-
     Map = geemap.Map()
 
-
     roi = None
-    coords = None
-
+    coordinates = None
 
     st.sidebar.markdown("""---""")
-    st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>", unsafe_allow_html=True)
+    st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>",
+                        unsafe_allow_html=True)
     sidebar_col1, sidebar_col2 = st.sidebar.columns([1, 1])
     with sidebar_col1:
         long = st.number_input('Longitude', value=0.0)
@@ -176,7 +177,7 @@ def main():
         lat = st.number_input('Latitude', value=0.0)
 
     if long != 0 and lat != 0:
-        coords = ee.Geometry.Point([long, lat])
+        coordinates = ee.Geometry.Point([long, lat])
 
     st.sidebar.markdown("<h3 style='text-align: center; color: grey;'>OR</h3>", unsafe_allow_html=True)
 
@@ -226,8 +227,8 @@ def main():
 
     with row0_col2:
         selected_year = st.number_input("Select a Year", min_value=datasets[sat]['year_range'][0],
-                                     max_value=datasets[sat]['year_range'][1],
-                                     value=datasets[sat]['year_range'][0])
+                                        max_value=datasets[sat]['year_range'][1],
+                                        value=datasets[sat]['year_range'][0])
 
     with row0_col3:
         brightness = st.number_input("Set brightness", value=3)
@@ -248,10 +249,9 @@ def main():
             mid_color = st.color_picker('Mid color', value='#ffff00')
             secondary_color = st.color_picker("Secondary color", value='#ff0000')
 
-
-    if coords is not None and roi is None:
-        Map.centerObject(coords, zoom=10)
-        add_rgb_layer_to_map(Map, sat, selected_year, coords, brightness, None, gamma)
+    if coordinates is not None and roi is None:
+        Map.centerObject(coordinates, zoom=10)
+        add_rgb_layer_to_map(Map, sat, selected_year, coordinates, brightness, None, gamma)
 
     if selected_year is not None and sat is not None and roi is not None:
         Map.centerObject(roi, zoom=10)
@@ -260,9 +260,8 @@ def main():
 
         if check_index:
             index_image, stats = calc_index(sat, index_name, selected_year, roi, clip)
-            Map.addLayer(index_image,
-                                       {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
-                                       f'{index_name},{sat} {selected_year}')
+            Map.addLayer(index_image, {'min': -1, 'max': 1, 'palette': [secondary_color, mid_color, main_color]},
+                         f'{index_name},{sat} {selected_year}')
             with row2_col2:
                 # Plot a bar chart of index statistics
                 fig, ax = plt.subplots()
@@ -281,13 +280,10 @@ def main():
                     st.write("Max:", stats[f"{index_name}_max"])
                     st.write("Std Dev:", stats[f"{index_name}_stdDev"])
 
-
-
         Map.add_gdf(gdf, 'polygon')
 
     with row1_col1:
         Map.to_streamlit(height=600)
-
 
 
 if __name__ == "__main__":
