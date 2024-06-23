@@ -319,13 +319,11 @@ def main():
             graph_data = st.multiselect("Данные", ["Max", "Mean", "Min"])
 
             if start_year <= end_year:
-                if graph_data and (coords is not None or roi is not None):
+                if graph_data is not None and (coords is not None or roi is not None):
                     region = coords if coords is not None else roi
                     fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, clip, graph_data)
                     st.pyplot(fig)
                     st.write(df)
-                else:
-                    st.error("Пожалуйста, установите точку интереса или загрузите shapefile.")
             else:
                 st.error("Конечный год должен быть больше или равен начальному году.")
 
