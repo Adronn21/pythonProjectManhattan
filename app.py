@@ -165,7 +165,7 @@ def main():
 
     roi = None
     coords = None
-    graph_check = None
+
 
     st.sidebar.markdown("""---""")
     st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>", unsafe_allow_html=True)
@@ -279,14 +279,14 @@ def main():
                     st.write("Mean:", stats[f"{index_name}_mean"])
                     st.write("Max:", stats[f"{index_name}_max"])
                     st.write("Std Dev:", stats[f"{index_name}_stdDev"])
-                    st.markdown("""---""")
-                    graph_check = st.toggle("Graph")
+
 
 
         Map.add_gdf(gdf, 'polygon')
 
     with row1_col1:
         Map.to_streamlit(height=600)
+
 
 
 if __name__ == "__main__":

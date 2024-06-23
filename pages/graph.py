@@ -68,6 +68,7 @@ indexes = {
 }
 
 
+
 def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip, graph_data):
     years = list(range(start_year, end_year + 1))
     index_values_dict = {data: [] for data in graph_data}
