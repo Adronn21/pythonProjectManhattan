@@ -156,7 +156,7 @@ def calc_index(satellite, index_name, year, region, clip):
 
 def main():
     setup()
-    navbar()
+    Navbar()
 
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
