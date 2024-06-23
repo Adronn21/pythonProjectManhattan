@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import zipfile
 import tempfile
 import os
-from app import navbar, calc_index
+from app import Navbar, calc_index
 
 
 def setup():
@@ -97,7 +97,7 @@ def plot_index_over_time(satellite, index_name, start_year, end_year, region, gr
 def main():
     # Execute setup function
     setup()
-    navbar()
+    Navbar()
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([1, 1])
 

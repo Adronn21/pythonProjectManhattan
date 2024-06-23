@@ -14,7 +14,7 @@ def setup():
     st.header("🛰️Satellite Imagery")
 
 
-def navbar():
+def Navbar():
     with st.sidebar:
         st.page_link('app.py', label='Satellite imagery', icon='🛰️')
         st.page_link('pages/graph.py', label='Graph', icon='📈')
