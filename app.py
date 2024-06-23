@@ -158,6 +158,7 @@ def main():
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
     row2_col1, row2_col2, row2_col3 = st.columns([1, 1, 1])
+    row3_col1, row3_col2, row3_col3 = st.columns([1, 1, 1])
 
     Map = geemap.Map()
 
@@ -315,11 +316,14 @@ def main():
     with row2_col1:
         if check_index and graph_check and (roi is not None or coords is not None):
             st.markdown("### График изменения индекса")
-            start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
-                                         max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
-            end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
-                                       max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
-            graph_data = st.multiselect("Данные", ["Max", "Mean", "Min"])
+            with row3_col1:
+                start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
+                                             max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
+            with row3_col2:
+                end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
+                                           max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
+            with row3_col3:
+                graph_data = st.multiselect("Данные", ["Max", "Mean", "Min"])
 
             if start_year <= end_year:
                 if graph_data is not None and (coords is not None or roi is not None):
