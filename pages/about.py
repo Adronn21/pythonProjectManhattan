@@ -14,9 +14,7 @@ def main():
 
     st.markdown("<h1 style='text-align: center'>Authors:</h1>",
                         unsafe_allow_html=True)
-    st.write("Baigabulov Adil"
-             "\nBekenov Bekzhan"
-             "\nOspan Akhmet")
+    st.write("Baigabulov Adil\nBekenov Bekzhan\nOspan Akhmet")
     st.markdown("""Group 05-057-21-05""")
     st.markdown("""The Department of Computer Science""")
     st.markdown("""Kazakh Agro-Technical Research University""")
