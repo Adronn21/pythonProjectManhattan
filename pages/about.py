@@ -12,8 +12,7 @@ def main():
     setup()
     Navbar()
 
-    st.header("Authors:",
-                        unsafe_allow_html=True)
+    st.header("Authors:")
     st.write("Baigabulov Adil")
     st.write("Bekenov Bekzhan")
     st.write("Ospanov Akhmet")
