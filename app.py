@@ -298,7 +298,7 @@ def main():
             for data in graph_data:
                 index_values_dict[data].append(stats[f"{index_name}_{data.lower()}"])
 
-        df = pd.DataFrame({'Year': int(years)})
+        df = pd.DataFrame({'Year': years})
         for data in graph_data:
             df[data] = index_values_dict[data]
 
