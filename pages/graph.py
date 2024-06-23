@@ -7,7 +7,7 @@ from io import BytesIO
 import zipfile
 import tempfile
 import os
-from app import Navbar, Mask_clouds
+from app import Navbar
 
 
 def setup():
@@ -65,6 +65,32 @@ indexes = {
     "PRI": "(RED - BLUE) / (RED + BLUE)",
     "WBI": "NIR / GREEN"
 }
+
+
+def plot_index_over_time(satellite, index_name, start_year, end_year, region, clip):
+    years = list(range(start_year, end_year + 1))
+    index_values = []
+
+    for year in years:
+        index_image, stats = calc_index(satellite, index_name, year, region, clip)
+        index_values.append(stats[f"{index_name}_mean"])
+
+    df = pd.DataFrame({
+        'Year': years,
+        'Index Value': index_values
+    })
+
+    fig, ax = plt.subplots()
+    ax.plot(df['Year'], df['Index Value'], marker='o', linestyle='-')
+    ax.set_title(f'{index_name} over Time ({start_year}-{end_year})')
+    ax.set_xlabel('Year')
+    ax.set_ylabel(f'{index_name} Value')
+    ax.grid(True)
+
+    return fig, df
+
+
+
 
 def main():
     # Execute setup function
@@ -124,6 +150,24 @@ def main():
     with row0_col2:
         years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1] + 1))
         selected_year = st.selectbox("Select a year", years, index=len(years) - 1)
+
+    with row2_col1:
+        st.markdown("### График изменения индекса")
+        start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
+                                     max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
+        end_year = st.number_input("Конечный год", min_value=datasets[sat]['year_range'][0],
+                                   max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][1])
+
+        if start_year <= end_year:
+            if roi is not None:
+                region = roi
+                fig, df = plot_index_over_time(sat, index_name, start_year, end_year, region, clip)
+                st.pyplot(fig)
+                st.write(df)
+            else:
+                st.error("Пожалуйста, установите точку интереса или загрузите shapefile.")
+        else:
+            st.error("Конечный год должен быть больше или равен начальному году.")
 
 if __name__ == "__main__":
     main()
