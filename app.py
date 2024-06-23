@@ -312,7 +312,7 @@ def main():
         return fig, df
 
     with row2_col1:
-        if graph_check and (roi is not None or coords is not None):
+        if check_index and graph_check and (roi is not None or coords is not None):
             st.markdown("### График изменения индекса")
             start_year = st.number_input("Начальный год", min_value=datasets[sat]['year_range'][0],
                                          max_value=datasets[sat]['year_range'][1], value=datasets[sat]['year_range'][0])
