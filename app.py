@@ -225,8 +225,9 @@ def main():
         sat = st.selectbox("Select a satellite", list(datasets.keys()), index=0)
 
     with row0_col2:
-        years = list(range(datasets[sat]['year_range'][0], datasets[sat]['year_range'][1] + 1))
-        selected_year = st.selectbox("Select a year", years, index=len(years) - 1)
+        selected_year = st.number_input("Select a Year", min_value=datasets[sat]['year_range'][0],
+                                     max_value=datasets[sat]['year_range'][1],
+                                     value=datasets[sat]['year_range'][0])
 
     with row0_col3:
         brightness = st.number_input("Set brightness", value=3)
