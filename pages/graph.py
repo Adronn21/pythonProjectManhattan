@@ -49,11 +49,8 @@ def main():
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([1, 1])
 
-    # Initialize session state
-    if 'roi' not in st.session_state:
-        st.session_state.roi = None
-    if 'coordinates' not in st.session_state:
-        st.session_state.coordinates = None
+    roi = None
+    coordinates = None
 
     st.sidebar.markdown("""---""")
     st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>",
@@ -89,8 +86,6 @@ def main():
             if shapefile_path:
                 # Read the shapefile into a GeoDataFrame
                 gdf = gpd.read_file(shapefile_path)
-                # Save the ROI to session state
-                st.session_state.roi = geemap.geopandas_to_ee(gdf)
             else:
                 st.error("Shapefile (.shp) not found in the uploaded zip file.")
 

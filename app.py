@@ -164,11 +164,8 @@ def main():
 
     Map = geemap.Map()
 
-    # Initialize session state
-    if 'roi' not in st.session_state:
-        st.session_state.roi = None
-    if 'coordinates' not in st.session_state:
-        st.session_state.coordinates = None
+    roi = None
+    coordinates = None
 
     st.sidebar.markdown("""---""")
     st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>",
@@ -180,7 +177,7 @@ def main():
         lat = st.number_input('Latitude', value=0.0)
 
     if long != 0 and lat != 0:
-        st.session_state.coordinates = ee.Geometry.Point([long, lat])
+        coordinates = ee.Geometry.Point([long, lat])
 
     st.sidebar.markdown("<h3 style='text-align: center; color: grey;'>OR</h3>", unsafe_allow_html=True)
 
@@ -219,9 +216,6 @@ def main():
                 # Display the plot in Streamlit
                 with row2_col1:
                     st.image(buf, caption='Geopandas Plot')
-
-                # Save the ROI to session state
-                st.session_state.roi = geemap.geopandas_to_ee(gdf)
             else:
                 st.error("Shapefile (.shp) not found in the uploaded zip file.")
 
