@@ -14,7 +14,8 @@ def main():
 
     st.markdown("<h1 style='text-align: center'>Authors:</h1>",
                         unsafe_allow_html=True)
-    st.markdown("""Baigabulov Adil""")
+    st.markdown("""Baigabulov Adil
+                   Bekenov Bekzhan""")
     st.markdown("""Bekenov Bekzhan""")
     st.markdown("""Ospan Akhmet""")
     st.markdown("""Group 05-057-21-05""")
