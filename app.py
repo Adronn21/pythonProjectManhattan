@@ -18,7 +18,7 @@ def Navbar():
     with st.sidebar:
         st.page_link('app.py', label='Satellite imagery', icon='🛰️')
         st.page_link('pages/graph.py', label='Graph', icon='📈')
-        st.page_link('pages/about.py', label='About', icon='📖')
+        # st.page_link('pages/about.py', label='About', icon='📖')
 
 
 # Datasets
@@ -157,7 +157,7 @@ def calc_index(satellite, index_name, year, region, clip):
 
 def main():
     setup()
-    # Navbar()
+    Navbar()
 
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
@@ -168,7 +168,7 @@ def main():
     roi = None
     coordinates = None
 
-    # st.sidebar.markdown("""---""")
+    st.sidebar.markdown("""---""")
     st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>",
                         unsafe_allow_html=True)
     sidebar_col1, sidebar_col2 = st.sidebar.columns([1, 1])
