@@ -168,7 +168,7 @@ def main():
     roi = None
     coordinates = None
 
-    st.sidebar.markdown("""---""")
+    # st.sidebar.markdown("""---""")
     st.sidebar.markdown("<h5 style='text-align: center; color: grey;'>Set point of interest</h5>",
                         unsafe_allow_html=True)
     sidebar_col1, sidebar_col2 = st.sidebar.columns([1, 1])
