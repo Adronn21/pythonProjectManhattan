@@ -17,8 +17,8 @@ def setup():
 def Navbar():
     with st.sidebar:
         st.page_link('app.py', label='Satellite imagery', icon='🛰️')
-        st.page_link('pages/graph.py', label='Graph', icon='📈')
-        st.page_link('pages/about.py', label='About', icon='📖')
+        # st.page_link('pages/graph.py', label='Graph', icon='📈')
+        # st.page_link('pages/about.py', label='About', icon='📖')
 
 
 # Datasets
