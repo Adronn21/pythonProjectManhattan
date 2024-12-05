@@ -18,6 +18,8 @@ def Navbar():
     with st.sidebar:
         st.page_link('app.py', label='Satellite imagery', icon='🛰️')
         st.page_link('pages/graph.py', label='Graph', icon='📈')
+
+
         # st.page_link('pages/about.py', label='About', icon='📖')
 
 
@@ -157,7 +159,7 @@ def calc_index(satellite, index_name, year, region, clip):
 
 def main():
     setup()
-    Navbar()
+    # Navbar()
 
     row0_col1, row0_col2, row0_col3, row0_col4, row0_col5 = st.columns([1, 1, 1, 1, 1])
     row1_col1, row1_col2 = st.columns([5, 1])
@@ -230,7 +232,6 @@ def main():
         selected_year = st.number_input("Select a Year", min_value=datasets[sat]['year_range'][0],
                                         max_value=datasets[sat]['year_range'][1],
                                         value=datasets[sat]['year_range'][0])
-
     with row0_col3:
         brightness = st.number_input("Set brightness", value=3)
 
